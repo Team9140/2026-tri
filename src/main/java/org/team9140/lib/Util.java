@@ -1,6 +1,9 @@
 package org.team9140.lib;
 
 import java.util.Optional;
+import java.util.function.Supplier;
+
+import com.ctre.phoenix6.StatusCode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -78,6 +81,14 @@ public class Util {
 
     public static double applyDeadband(double in) {
         return applyDeadband(in, defaultDeadband);
+    }
+
+    /** Attempts to run the command until no error is produced. */
+    public static void tryUntilOk(int maxAttempts, Supplier<StatusCode> command) {
+        for (int i = 0; i < maxAttempts; i++) {
+            var error = command.get();
+            if (error.isOK()) break;
+        }
     }
 }
 
