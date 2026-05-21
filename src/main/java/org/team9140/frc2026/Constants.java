@@ -21,6 +21,7 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static class Ports {
+        public static final CANBus ROBO_RIO = CANBus.roboRIO();
         public static final CANBus CANIVORE = new CANBus("sixseven", "./logs/example.hoot");
         public static final CANBus SHOOTER_CANIVORE = new CANBus("kenny", "./logs/example.hoot");
         public static final int TURRET_MOTOR = 12;
