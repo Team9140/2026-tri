@@ -90,5 +90,9 @@ public class Util {
             if (error.isOK()) break;
         }
     }
+
+    public static void tryUntilOk(Supplier<StatusCode> command) {
+        tryUntilOk(5, command);
+    }
 }
 
