@@ -4,6 +4,10 @@
 
 package org.team9140.frc2026;
 
+import org.team9140.frc2026.subsystems.Extender.Extender;
+import org.team9140.frc2026.subsystems.Extender.ExtenderIO;
+import org.team9140.frc2026.subsystems.Extender.ExtenderIOReal;
+import org.team9140.frc2026.subsystems.Extender.ExtenderIOSim;
 import org.team9140.frc2026.subsystems.Roller.Roller;
 import org.team9140.frc2026.subsystems.Roller.RollerIO;
 import org.team9140.frc2026.subsystems.Roller.RollerIOReal;
@@ -26,17 +30,21 @@ public class RobotContainer {
       new CommandXboxController(0);
 
   private final Roller roller;
+  private final Extender extender;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
       case REAL -> {
         roller = new Roller(new RollerIOReal());
+        extender = new Extender(new ExtenderIOReal());
       }
       case SIM -> {
         roller = new Roller(new RollerIOSim());
+        extender = new Extender(new ExtenderIOSim());
       }
       default -> {
         roller = new Roller(new RollerIO() {});
+        extender = new Extender(new ExtenderIO() {});
       }
 
     }
