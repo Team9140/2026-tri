@@ -32,7 +32,7 @@ public class ExtenderIOReal implements ExtenderIO{
     private final MotionMagicTorqueCurrentFOC motionMagic = new MotionMagicTorqueCurrentFOC(0);
     private final MotionMagicConfigs motionMagicConfigs;
 
-    private final StatusSignal<Angle> rawMotorPosition;
+    private final StatusSignal<Angle> motorPosition;
     private final StatusSignal<Voltage> appliedVoltage;
     private final StatusSignal<Current> supplyCurrent;
     private final StatusSignal<Current> torqueCurrent;
@@ -81,7 +81,7 @@ public class ExtenderIOReal implements ExtenderIO{
         this.extenderMotor.getConfigurator().apply(motorConfigs);
 
         // fetch main motor's signals
-        this.rawMotorPosition = this.extenderMotor.getPosition(false);
+        this.motorPosition = this.extenderMotor.getPosition(false);
         this.appliedVoltage = this.extenderMotor.getMotorVoltage(false);
         this.supplyCurrent = this.extenderMotor.getSupplyCurrent(false);
         this.torqueCurrent = this.extenderMotor.getTorqueCurrent(false);
@@ -89,7 +89,7 @@ public class ExtenderIOReal implements ExtenderIO{
 
         // Set frequency for signals being used
         Util.tryUntilOk(() -> BaseStatusSignal.setUpdateFrequencyForAll(50.0, 
-                this.rawMotorPosition,
+                this.motorPosition,
                 this.appliedVoltage,
                 this.supplyCurrent,
                 this.torqueCurrent,
@@ -103,14 +103,15 @@ public class ExtenderIOReal implements ExtenderIO{
     @Override
     public void updateInputs(ExtenderIOInputs inputs) {
         StatusCode extenderMotorStatus =  BaseStatusSignal.refreshAll(
-                                        this.rawMotorPosition,
+                                        this.motorPosition,
                                         this.appliedVoltage,
                                         this.supplyCurrent,
                                         this.torqueCurrent,
                                         this.tempCelsius);
         
         inputs.connected = connectedDebouncer.calculate(extenderMotorStatus.isOK());
-        inputs.rawMotorPosition = this.rawMotorPosition.getValueAsDouble();
+        inputs.motorPosition = this.motorPosition.getValueAsDouble();
+        inputs.intakePosition = this.getPosition();
         inputs.appliedVoltage = this.appliedVoltage.getValueAsDouble();
         inputs.supplyCurrentAmps = this.supplyCurrent.getValueAsDouble();
         inputs.torqueCurrentAmps = this.torqueCurrent.getValueAsDouble();
@@ -126,6 +127,6 @@ public class ExtenderIOReal implements ExtenderIO{
 
     @Override
     public double getPosition() {
-        return this.rawMotorPosition.getValueAsDouble() * Constants.Extender.PINION_CIRCUMFERENCE;
+        return this.motorPosition.getValueAsDouble() * Constants.Extender.PINION_CIRCUMFERENCE;
     }
 }

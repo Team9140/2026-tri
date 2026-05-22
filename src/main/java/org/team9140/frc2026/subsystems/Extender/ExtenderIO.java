@@ -7,7 +7,8 @@ public interface ExtenderIO {
 
     @AutoLog
     static class ExtenderIOInputs {
-        public double rawMotorPosition;
+        public double intakePosition;
+        public double motorPosition;
         public double appliedVoltage;
         public double supplyCurrentAmps;
         public double torqueCurrentAmps;
