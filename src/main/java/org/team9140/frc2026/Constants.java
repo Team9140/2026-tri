@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -20,6 +21,18 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static final Mode simMode = Mode.SIM;
+  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+
+  public static enum Mode {
+    // running on actual robot
+    REAL,
+    // using physics sim
+    SIM,
+    // replaying from logged data
+    REPLAY
+  }
+
   public static class Ports {
         public static final CANBus ROBO_RIO = CANBus.roboRIO();
         public static final CANBus CANIVORE = new CANBus("sixseven", "./logs/example.hoot");
