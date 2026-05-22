@@ -1,4 +1,4 @@
-package org.team9140.frc2026.subsystems.Extender;
+package org.team9140.frc2026.subsystems.extender;
 
 import org.team9140.frc2026.Constants;
 import org.team9140.lib.Util;
