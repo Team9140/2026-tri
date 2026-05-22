@@ -29,9 +29,9 @@ public class RollerIOSim implements RollerIO {
         inputs.tempCelsius = 0.0;
 
         // update follower motor inputs
-        inputs.connected = true;
+        inputs.followerConnected = true;
         inputs.followerAppliedVoltage = rollerSim.getInputVoltage();
-        inputs.supplyCurrentAmps = rollerSim.getCurrentDrawAmps();
+        inputs.followerSupplyCurrentAmps = rollerSim.getCurrentDrawAmps();
         inputs.followerTorqueCurrentAmps = motor.getCurrent(rollerSim.getTorqueNewtonMeters());
         inputs.followerTempCelsius = 0.0;
     }

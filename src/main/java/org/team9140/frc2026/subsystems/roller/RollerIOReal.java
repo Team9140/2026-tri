@@ -110,9 +110,9 @@ public class RollerIOReal implements RollerIO{
         inputs.tempCelsius = tempCelsius.getValueAsDouble();
 
         // update follower motor inputs
-        inputs.connected = connectedDebouncer.calculate(rollerFollowerMotorStatus.isOK());
+        inputs.followerConnected = connectedDebouncer.calculate(rollerFollowerMotorStatus.isOK());
         inputs.followerAppliedVoltage = followerAppliedVoltage.getValueAsDouble();
-        inputs.supplyCurrentAmps = followerSupplyCurrent.getValueAsDouble();
+        inputs.followerSupplyCurrentAmps = followerSupplyCurrent.getValueAsDouble();
         inputs.followerTorqueCurrentAmps = followerTorqueCurrent.getValueAsDouble();
         inputs.followerTempCelsius = followerTempCelsius.getValueAsDouble();
     } 
