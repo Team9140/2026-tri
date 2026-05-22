@@ -81,11 +81,11 @@ public class ExtenderIOReal implements ExtenderIO{
         this.extenderMotor.getConfigurator().apply(motorConfigs);
 
         // fetch main motor's signals
-        this.rawMotorPosition = this.extenderMotor.getPosition();
-        this.appliedVoltage = this.extenderMotor.getMotorVoltage();
-        this.supplyCurrent = this.extenderMotor.getSupplyCurrent();
-        this.torqueCurrent = this.extenderMotor.getTorqueCurrent();
-        this.tempCelsius = this.extenderMotor.getDeviceTemp();
+        this.rawMotorPosition = this.extenderMotor.getPosition(false);
+        this.appliedVoltage = this.extenderMotor.getMotorVoltage(false);
+        this.supplyCurrent = this.extenderMotor.getSupplyCurrent(false);
+        this.torqueCurrent = this.extenderMotor.getTorqueCurrent(false);
+        this.tempCelsius = this.extenderMotor.getDeviceTemp(false);
 
         // Set frequency for signals being used
         Util.tryUntilOk(() -> BaseStatusSignal.setUpdateFrequencyForAll(50.0, 

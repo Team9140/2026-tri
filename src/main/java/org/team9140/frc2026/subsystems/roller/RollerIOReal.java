@@ -62,16 +62,16 @@ public class RollerIOReal implements RollerIO{
                 new Follower(Ports.ROLLER_MOTOR, MotorAlignmentValue.Opposed)));
 
         // fetch main motor's signals
-        this.appliedVoltage = rollerMotor.getMotorVoltage();
-        this.supplyCurrent = rollerMotor.getSupplyCurrent();
-        this.torqueCurrent = rollerMotor.getTorqueCurrent();
-        this.tempCelsius = rollerMotor.getDeviceTemp();
+        this.appliedVoltage = rollerMotor.getMotorVoltage(false);
+        this.supplyCurrent = rollerMotor.getSupplyCurrent(false);
+        this.torqueCurrent = rollerMotor.getTorqueCurrent(false);
+        this.tempCelsius = rollerMotor.getDeviceTemp(false);
 
         // fetch follower motor's signals
-        this.followerAppliedVoltage = rollerFollowerMotor.getMotorVoltage();
-        this.followerSupplyCurrent = rollerFollowerMotor.getSupplyCurrent();
-        this.followerTorqueCurrent = rollerFollowerMotor.getTorqueCurrent();
-        this.followerTempCelsius = rollerFollowerMotor.getDeviceTemp();
+        this.followerAppliedVoltage = rollerFollowerMotor.getMotorVoltage(false);
+        this.followerSupplyCurrent = rollerFollowerMotor.getSupplyCurrent(false);
+        this.followerTorqueCurrent = rollerFollowerMotor.getTorqueCurrent(false);
+        this.followerTempCelsius = rollerFollowerMotor.getDeviceTemp(false);
 
         // Set frequency for signals being used
         Util.tryUntilOk(() -> BaseStatusSignal.setUpdateFrequencyForAll(50.0, 
