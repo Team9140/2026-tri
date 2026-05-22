@@ -1,4 +1,4 @@
-package org.team9140.frc2026.subsystems.roller;
+package org.team9140.frc2026.subsystems.Roller;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
