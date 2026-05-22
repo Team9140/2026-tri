@@ -7,7 +7,7 @@ public interface ExtenderIO {
 
     @AutoLog
     static class ExtenderIOInputs {
-        public double angle;
+        public double rawMotorPosition;
         public double appliedVoltage;
         public double supplyCurrentAmps;
         public double torqueCurrentAmps;
@@ -17,7 +17,7 @@ public interface ExtenderIO {
 
     default void updateInputs(ExtenderIOInputs inputs) {};
     
-    default void setPosition(double position, double maxVelocity) {};
+    default void goToPosition(double position, double maxVelocity) {};
 
     default double getPosition() { return 0.0; };
 }

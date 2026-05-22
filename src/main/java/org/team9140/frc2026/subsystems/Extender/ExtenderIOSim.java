@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 public class ExtenderIOSim implements ExtenderIO {
     private final DCMotorSim extenderSim;
     private final DCMotor motor;
-
-    private double targetPosition;
     
     private final ProfiledPIDController pidController;
     
@@ -44,7 +42,7 @@ public class ExtenderIOSim implements ExtenderIO {
         extenderSim.update(Constants.LOOP_PERIOD);
         
         inputs.connected = true;
-        inputs.angle = extenderSim.getAngularPositionRotations();
+        inputs.rawMotorPosition = extenderSim.getAngularPositionRotations();
         inputs.appliedVoltage = extenderSim.getInputVoltage();
         inputs.supplyCurrentAmps = extenderSim.getCurrentDrawAmps();
         inputs.torqueCurrentAmps = motor.getCurrent(extenderSim.getTorqueNewtonMeters());
@@ -52,10 +50,9 @@ public class ExtenderIOSim implements ExtenderIO {
     }
 
     @Override
-    public void setPosition(double position, double maxVelocity) {
-        this.targetPosition = position;
+    public void goToPosition(double position, double maxVelocity) {
         this.pidController.setConstraints(new TrapezoidProfile.Constraints(maxVelocity, Constants.Extender.MM_ACCELERATION));
-        this.pidController.setGoal(this.targetPosition / Constants.Extender.PINION_CIRCUMFERENCE);
+        this.pidController.setGoal(position / Constants.Extender.PINION_CIRCUMFERENCE);
     }
 
     @Override
