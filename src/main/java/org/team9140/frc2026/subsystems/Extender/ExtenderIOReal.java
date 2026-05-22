@@ -42,7 +42,7 @@ public class ExtenderIOReal implements ExtenderIO{
     private final Debouncer connectedDebouncer = new Debouncer(0.5, DebounceType.kFalling);
 
     public ExtenderIOReal() {
-        extenderMotor = new TalonFX(Ports.EXTENDER_MOTOR, Ports.ROBO_RIO);
+        extenderMotor = new TalonFX(Ports.EXTENDER_MOTOR, Ports.CANIVORE);
 
         CurrentLimitsConfigs currentLimits = new CurrentLimitsConfigs()
                 .withStatorCurrentLimit(Constants.Extender.STATOR_CURRENT_LIMIT)
