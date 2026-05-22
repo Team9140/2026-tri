@@ -4,6 +4,11 @@
 
 package org.team9140.frc2026;
 
+import org.team9140.frc2026.subsystems.roller.Roller;
+import org.team9140.frc2026.subsystems.roller.RollerIO;
+import org.team9140.frc2026.subsystems.roller.RollerIOReal;
+import org.team9140.frc2026.subsystems.roller.RollerIOSim;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -20,8 +25,22 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(0);
 
+  private final Roller roller;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    switch (Constants.currentMode) {
+      case REAL -> {
+        roller = new Roller(new RollerIOReal());
+      }
+      case SIM -> {
+        roller = new Roller(new RollerIOSim());
+      }
+      default -> {
+        roller = new Roller(new RollerIO() {});
+      }
+
+    }
+
     // Configure the trigger bindings
     configureBindings();
   }
