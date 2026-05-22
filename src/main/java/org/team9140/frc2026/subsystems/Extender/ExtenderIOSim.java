@@ -5,12 +5,11 @@ import org.team9140.lib.Util;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 
 public class ExtenderIOSim implements ExtenderIO {
-    private final DCMotorSim extenderSim;
+    private final ElevatorSim extenderSim;
     private final DCMotor motor;
     
     private final ProfiledPIDController pidController;
@@ -18,10 +17,16 @@ public class ExtenderIOSim implements ExtenderIO {
     private double appliedVolts = 0.0;
 
     public ExtenderIOSim() {
-        motor = DCMotor.getKrakenX60Foc(1);
-        extenderSim = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(motor, 0.0005, 1),
-            motor);
+        motor = DCMotor.getKrakenX44(1);
+        extenderSim = new ElevatorSim(motor,
+            Constants.Extender.GEAR_RATIO,
+            10,
+            Constants.Extender.PINION_CIRCUMFERENCE / Math.PI / 2.0,
+            Constants.Extender.REVERSE_SOFT_LIMIT_THRESHOLD,
+            Constants.Extender.ARM_OUT_POSITION,
+            false,
+            0);
+
         pidController = new ProfiledPIDController(
             Constants.Extender.KP, 
             0.0, 
@@ -36,17 +41,21 @@ public class ExtenderIOSim implements ExtenderIO {
 
     @Override
     public void updateInputs(ExtenderIOInputs inputs) {
-        appliedVolts = Util.clamp(pidController.calculate(extenderSim.getAngularPositionRad()), 12.0);
+        double intakePos = extenderSim.getPositionMeters();
+
+        appliedVolts = Util.clamp(pidController.calculate(intakePos / Constants.Extender.PINION_CIRCUMFERENCE), 12.0);
         extenderSim.setInputVoltage(appliedVolts);
 
-        extenderSim.update(Constants.LOOP_PERIOD);
-        
         inputs.connected = true;
-        inputs.rawMotorPosition = extenderSim.getAngularPositionRotations();
-        inputs.appliedVoltage = extenderSim.getInputVoltage();
+        inputs.motorPosition = intakePos / Constants.Extender.PINION_CIRCUMFERENCE;
+        inputs.intakePosition = intakePos;
+        inputs.appliedVoltage = appliedVolts;
         inputs.supplyCurrentAmps = extenderSim.getCurrentDrawAmps();
-        inputs.torqueCurrentAmps = motor.getCurrent(extenderSim.getTorqueNewtonMeters());
+        inputs.torqueCurrentAmps = 0; // I don't know what to do for this one
         inputs.tempCelsius = 0.0;
+        
+
+        extenderSim.update(Constants.LOOP_PERIOD);
     }
 
     @Override
@@ -57,6 +66,6 @@ public class ExtenderIOSim implements ExtenderIO {
 
     @Override
     public double getPosition() {
-        return this.extenderSim.getAngularPositionRotations() * Constants.Extender.PINION_CIRCUMFERENCE;
+        return this.extenderSim.getPositionMeters();
     }
 }
