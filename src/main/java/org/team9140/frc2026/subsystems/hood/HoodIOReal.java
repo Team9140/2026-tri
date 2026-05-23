@@ -25,6 +25,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
@@ -43,6 +45,8 @@ public class HoodIOReal implements HoodIO{
 
     private final StatusSignal<Angle> CANcoderAbsoluteAngle;
     private final StatusSignal<Angle> CANcoderAngle;
+
+    private final Debouncer connectedDebouncer = new Debouncer(0.5, DebounceType.kFalling);
 
     public HoodIOReal() {
         hoodMotor = new TalonFX(Ports.HOOD_MOTOR, Ports.SHOOTER_CANIVORE);
@@ -144,14 +148,14 @@ public class HoodIOReal implements HoodIO{
                 CANcoderAbsoluteAngle,
                 CANcoderAngle);
         
-        inputs.connected = motorStatus.isOK();
+        inputs.connected = connectedDebouncer.calculate(motorStatus.isOK());
         inputs.hoodAngleRotations = hoodAngle.getValueAsDouble();
         inputs.appliedVoltage = appliedVoltage.getValueAsDouble();
         inputs.supplyCurrentAmps = supplyCurrent.getValueAsDouble();
         inputs.torqueCurrentAmps = torqueCurrent.getValueAsDouble();
         inputs.tempCelsius = tempCelsius.getValueAsDouble();
 
-        inputs.CANcoderConnected = CANcoderStatus.isOK();
+        inputs.CANcoderConnected = connectedDebouncer.calculate(CANcoderStatus.isOK());
         inputs.CANcoderAbsolutePositionRot = CANcoderAbsoluteAngle.getValueAsDouble();
         inputs.CANcoderPositionRot = CANcoderAngle.getValueAsDouble();
     }
