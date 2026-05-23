@@ -8,6 +8,10 @@ import org.team9140.frc2026.subsystems.extender.Extender;
 import org.team9140.frc2026.subsystems.extender.ExtenderIO;
 import org.team9140.frc2026.subsystems.extender.ExtenderIOReal;
 import org.team9140.frc2026.subsystems.extender.ExtenderIOSim;
+import org.team9140.frc2026.subsystems.hood.Hood;
+import org.team9140.frc2026.subsystems.hood.HoodIO;
+import org.team9140.frc2026.subsystems.hood.HoodIOReal;
+import org.team9140.frc2026.subsystems.hood.HoodIOSim;
 import org.team9140.frc2026.subsystems.roller.Roller;
 import org.team9140.frc2026.subsystems.roller.RollerIO;
 import org.team9140.frc2026.subsystems.roller.RollerIOReal;
@@ -36,6 +40,7 @@ public class RobotContainer {
   private final Roller roller;
   private final Extender extender;
   private final Turret turret;
+  private final Hood hood;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -43,16 +48,19 @@ public class RobotContainer {
         roller = new Roller(new RollerIOReal());
         extender = new Extender(new ExtenderIOReal());
         turret = new Turret(new TurretIOReal());
+        hood = new Hood(new HoodIOReal());
       }
       case SIM -> {
         roller = new Roller(new RollerIOSim());
         extender = new Extender(new ExtenderIOSim());
         turret = new Turret(new TurretIOSim());
+        hood = new Hood(new HoodIOSim());
       }
       default -> {
         roller = new Roller(new RollerIO() {});
         extender = new Extender(new ExtenderIO() {});
         turret = new Turret(new TurretIO() {});
+        hood = new Hood(new HoodIO() {});
       }
 
     }
