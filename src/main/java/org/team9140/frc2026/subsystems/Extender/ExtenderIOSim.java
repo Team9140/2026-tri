@@ -63,9 +63,4 @@ public class ExtenderIOSim implements ExtenderIO {
         this.pidController.setConstraints(new TrapezoidProfile.Constraints(maxVelocity, Constants.Extender.MM_ACCELERATION));
         this.pidController.setGoal(position / Constants.Extender.PINION_CIRCUMFERENCE);
     }
-
-    @Override
-    public double getPosition() {
-        return this.extenderSim.getPositionMeters();
-    }
 }

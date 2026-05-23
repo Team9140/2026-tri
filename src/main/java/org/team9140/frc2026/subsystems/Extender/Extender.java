@@ -18,6 +18,10 @@ public class Extender extends SubsystemBase{
         this.extender = extender;
     }
 
+    public double getPosition() {
+        return inputs.intakePosition;
+    }
+
     @Override
     public void periodic() {
         extender.updateInputs(inputs);

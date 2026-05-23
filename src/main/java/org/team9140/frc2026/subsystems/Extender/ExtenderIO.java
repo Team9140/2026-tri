@@ -20,5 +20,4 @@ public interface ExtenderIO {
     
     default void goToPosition(double position, double maxVelocity) {};
 
-    default double getPosition() { return 0.0; };
 }
