@@ -12,6 +12,10 @@ import org.team9140.frc2026.subsystems.roller.Roller;
 import org.team9140.frc2026.subsystems.roller.RollerIO;
 import org.team9140.frc2026.subsystems.roller.RollerIOReal;
 import org.team9140.frc2026.subsystems.roller.RollerIOSim;
+import org.team9140.frc2026.subsystems.turret.Turret;
+import org.team9140.frc2026.subsystems.turret.TurretIO;
+import org.team9140.frc2026.subsystems.turret.TurretIOReal;
+import org.team9140.frc2026.subsystems.turret.TurretIOSim;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -31,20 +35,24 @@ public class RobotContainer {
 
   private final Roller roller;
   private final Extender extender;
+  private final Turret turret;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
       case REAL -> {
         roller = new Roller(new RollerIOReal());
         extender = new Extender(new ExtenderIOReal());
+        turret = new Turret(new TurretIOReal());
       }
       case SIM -> {
         roller = new Roller(new RollerIOSim());
         extender = new Extender(new ExtenderIOSim());
+        turret = new Turret(new TurretIOSim());
       }
       default -> {
         roller = new Roller(new RollerIO() {});
         extender = new Extender(new ExtenderIO() {});
+        turret = new Turret(new TurretIO() {});
       }
 
     }
