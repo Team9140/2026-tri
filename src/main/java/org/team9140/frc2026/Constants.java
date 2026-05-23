@@ -147,6 +147,11 @@ public final class Constants {
         public static final double SENSOR_TO_MECHANISM_RATIO = 170.0 / 10.0 * 16.0 / 25.0;
         public static final double CANCODER_OFFSET_ROTS = -0.32;
         public static final double ANGLE_MIN = Units.degreesToRadians(18.0);
+        
+        // different sim PID so it behaves normally, needed bc sim PID controller has dif units
+        public static final double SIM_KP = 200.0;
+        public static final double SIM_KI = 0.0;
+        public static final double SIM_KD = 5.0;
     }
 
     public static class Roller {
