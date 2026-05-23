@@ -2,6 +2,7 @@ package org.team9140.frc2026.subsystems.extender;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -47,6 +48,10 @@ public class Extender extends SubsystemBase{
     }
 
     public Command armInOutLoop() {
-        return armIn().withTimeout(1).andThen(armOut().withTimeout(1)).repeatedly();
+        return armIn()
+            .andThen(new WaitCommand(1))
+            .andThen(armOut())
+            .andThen(new WaitCommand(1))
+            .repeatedly();
     }
 }
