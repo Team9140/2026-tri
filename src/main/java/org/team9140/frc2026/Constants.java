@@ -187,19 +187,19 @@ public final class Constants {
         public static final double SIM_KP = 50;
     }
 
-    public static class Hopper {
-        public static final double SPINNER_STATOR_CURRENT_LIMIT = 40.0;
-        public static final double SPINNER_SUPPLY_CURRENT_LIMIT = 40;
+    public static class Spinner {
+        public static final double STATOR_CURRENT_LIMIT = 40.0;
+        public static final double SUPPLY_CURRENT_LIMIT = 40;
 
-        public static final double SPINNER_VOLTAGE = 10.0;
-        public static final double SPINNER_REVERSE_VOLTAGE = -2.0;
+        public static final double VOLTAGE = 10.0;
+        public static final double REVERSE_VOLTAGE = -2.0;
     }
 
     public static class Feeder {
-        public static final double FEEDER_STATOR_CURRENT_LIMIT = 40.0;
-        public static final double FEEDER_SUPPLY_CURRENT_LIMIT = 60;
-        
-        public static final double FEEDER_VOLTAGE = 12;
+        public static final double STATOR_CURRENT_LIMIT = 40.0;
+        public static final double SUPPLY_CURRENT_LIMIT = 60;
+
+        public static final double VOLTAGE = 12;
         public static final double REVERSE_FEEDER_TIME = 1.0;
     }
 
