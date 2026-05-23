@@ -30,9 +30,9 @@ public class TurretIOSim implements TurretIO{
                 0);
         
         controller = new ProfiledPIDController(
-                Turret.KP,
-                Turret.KI,
-                Turret.KD,
+                Turret.SIM_KP,
+                Turret.SIM_KI,
+                Turret.SIM_KD,
                 new TrapezoidProfile.Constraints(Turret.MM_CRUISE_VELOCITY, Turret.MM_ACCELERATION),
                 Constants.LOOP_PERIOD
         );

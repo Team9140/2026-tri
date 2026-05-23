@@ -120,6 +120,11 @@ public final class Constants {
 
         public static final double TURN_SHOOTER_OFF_TIME = 1.0;
         public static final double CANCODER_OFFSET_ROTS = 0.246;
+
+        // different sim PID constants so sim stops occilating like crazy
+        public static final double SIM_KP = 100.0;
+        public static final double SIM_KI = 0.0;
+        public static final double SIM_KD = 1.0;
     }
 
     public static class Hood {
@@ -172,6 +177,9 @@ public final class Constants {
 
         public static final double FORWARD_SOFT_LIMIT_THRESHOLD = ARM_OUT_POSITION / PINION_CIRCUMFERENCE;
         public static final double REVERSE_SOFT_LIMIT_THRESHOLD = 0;
+
+        // different sim PID to get rid of occilation
+        public static final double SIM_KP = 50;
     }
 
     public static class Hopper {

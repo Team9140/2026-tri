@@ -28,7 +28,7 @@ public class ExtenderIOSim implements ExtenderIO {
             0);
 
         pidController = new ProfiledPIDController(
-            Constants.Extender.KP, 
+            Constants.Extender.SIM_KP, 
             0.0, 
             0.0, 
             new TrapezoidProfile.Constraints(
