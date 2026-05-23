@@ -16,6 +16,10 @@ import org.team9140.frc2026.subsystems.roller.Roller;
 import org.team9140.frc2026.subsystems.roller.RollerIO;
 import org.team9140.frc2026.subsystems.roller.RollerIOReal;
 import org.team9140.frc2026.subsystems.roller.RollerIOSim;
+import org.team9140.frc2026.subsystems.spinner.Spinner;
+import org.team9140.frc2026.subsystems.spinner.SpinnerIO;
+import org.team9140.frc2026.subsystems.spinner.SpinnerIOReal;
+import org.team9140.frc2026.subsystems.spinner.SpinnerIOSim;
 import org.team9140.frc2026.subsystems.turret.Turret;
 import org.team9140.frc2026.subsystems.turret.TurretIO;
 import org.team9140.frc2026.subsystems.turret.TurretIOReal;
@@ -41,6 +45,7 @@ public class RobotContainer {
   private final Extender extender;
   private final Turret turret;
   private final Hood hood;
+  private final Spinner spinner;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -49,18 +54,21 @@ public class RobotContainer {
         extender = new Extender(new ExtenderIOReal());
         turret = new Turret(new TurretIOReal());
         hood = new Hood(new HoodIOReal());
+        spinner = new Spinner(new SpinnerIOReal());
       }
       case SIM -> {
         roller = new Roller(new RollerIOSim());
         extender = new Extender(new ExtenderIOSim());
         turret = new Turret(new TurretIOSim());
         hood = new Hood(new HoodIOSim());
+        spinner = new Spinner(new SpinnerIOSim());
       }
-      default -> {
+      default -> { // This is replay but ide says it needs a default case
         roller = new Roller(new RollerIO() {});
         extender = new Extender(new ExtenderIO() {});
         turret = new Turret(new TurretIO() {});
         hood = new Hood(new HoodIO() {});
+        spinner = new Spinner(new SpinnerIO() {});
       }
 
     }
