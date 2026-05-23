@@ -4,6 +4,7 @@ import org.team9140.frc2026.Constants;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class RollerIOSim implements RollerIO {
@@ -19,7 +20,9 @@ public class RollerIOSim implements RollerIO {
 
     @Override
     public void updateInputs(RollerIOInputs inputs) {
-
+        if (DriverStation.isDisabled()) {
+            off();
+        }
         rollerSim.update(Constants.LOOP_PERIOD);
 
         inputs.connected = true;

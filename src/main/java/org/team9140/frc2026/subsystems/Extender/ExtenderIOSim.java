@@ -6,6 +6,7 @@ import org.team9140.lib.Util;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 
 public class ExtenderIOSim implements ExtenderIO {
@@ -14,7 +15,6 @@ public class ExtenderIOSim implements ExtenderIO {
     
     private final ProfiledPIDController pidController;
     
-    private double appliedVolts = 0.0;
 
     public ExtenderIOSim() {
         motor = DCMotor.getKrakenX44(1);
@@ -43,7 +43,13 @@ public class ExtenderIOSim implements ExtenderIO {
     public void updateInputs(ExtenderIOInputs inputs) {
         double intakePos = extenderSim.getPositionMeters();
 
-        appliedVolts = Util.clamp(pidController.calculate(intakePos / Constants.Extender.PINION_CIRCUMFERENCE), 12.0);
+        double appliedVolts = 0.0;
+        if (DriverStation.isDisabled()) {
+            appliedVolts = 0.0;
+        }
+        else {
+            appliedVolts = Util.clamp(pidController.calculate(intakePos / Constants.Extender.PINION_CIRCUMFERENCE), 12.0);
+        }
         extenderSim.setInputVoltage(appliedVolts);
 
         inputs.connected = true;

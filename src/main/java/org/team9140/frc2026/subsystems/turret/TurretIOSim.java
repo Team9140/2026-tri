@@ -7,6 +7,7 @@ import org.team9140.lib.Util;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
 public class TurretIOSim implements TurretIO{
@@ -42,7 +43,10 @@ public class TurretIOSim implements TurretIO{
     public void updateInputs(TurretIOInputs inputs) {
         double turretPos = turretMotorSim.getAngleRads() / 2 / Math.PI;
         double appliedVolts = 0.0;
-        if (!usingVoltage){
+        if (DriverStation.isDisabled()) {
+            appliedVolts = 0.0;
+        }
+        else if (!usingVoltage){
             appliedVolts = Util.clamp(controller.calculate(turretPos), 12);
         }
         else {
