@@ -1,5 +1,6 @@
 package org.team9140.frc2026.subsystems.shooter;
 
+import org.team9140.frc2026.Constants;
 import org.team9140.frc2026.Constants.Shooter;
 
 import com.ctre.phoenix6.Utils;
@@ -15,7 +16,7 @@ public class ShooterIOSim extends ShooterIOReal {
     private final DCMotorSim shooterMotorSim;
     private Notifier simNotifier;
     private double m_lastSimTime;
-    private double kSimLoopPeriod = 0.004;
+    private double kSimLoopPeriod = Constants.SIM_LOOP_PERIOD;
 
     public ShooterIOSim() {
         super(); // Sets up config stuff

@@ -33,7 +33,7 @@ public final class Constants {
     REPLAY
   }
 
-  public static final double LOOP_PERIOD = 0.02; // In seconds
+  public static final double SIM_LOOP_PERIOD = 0.004; // In seconds
 
   public static class Ports {
         public static final CANBus ROBO_RIO = CANBus.roboRIO();

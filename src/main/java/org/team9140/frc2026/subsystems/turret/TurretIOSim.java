@@ -1,5 +1,6 @@
 package org.team9140.frc2026.subsystems.turret;
 
+import org.team9140.frc2026.Constants;
 import org.team9140.frc2026.Constants.Turret;
 
 import com.ctre.phoenix6.Utils;
@@ -14,7 +15,7 @@ public class TurretIOSim extends TurretIOReal{
     private final DCMotor motor;
     private Notifier simNotifier;
     private double m_lastSimTime;
-    private double kSimLoopPeriod = 0.004;
+    private double kSimLoopPeriod = Constants.SIM_LOOP_PERIOD;
 
     public TurretIOSim () {
         motor = DCMotor.getKrakenX60Foc(1);

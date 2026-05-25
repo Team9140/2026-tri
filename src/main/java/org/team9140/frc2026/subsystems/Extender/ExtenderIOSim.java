@@ -1,5 +1,6 @@
 package org.team9140.frc2026.subsystems.extender;
 
+import org.team9140.frc2026.Constants;
 import org.team9140.frc2026.Constants.Extender;
 
 import com.ctre.phoenix6.Utils;
@@ -14,7 +15,7 @@ public class ExtenderIOSim extends ExtenderIOReal{
     private final DCMotor motor;
     private Notifier simNotifier;
     private double m_lastSimTime;
-    private double kSimLoopPeriod = 0.004;
+    private double kSimLoopPeriod = Constants.SIM_LOOP_PERIOD;
 
 
     public ExtenderIOSim() {

@@ -1,5 +1,6 @@
 package org.team9140.frc2026.subsystems.hood;
 
+import org.team9140.frc2026.Constants;
 import org.team9140.frc2026.Constants.Hood;
 import org.team9140.lib.Util;
 
@@ -15,7 +16,7 @@ public class HoodIOSim extends HoodIOReal{
     private final SingleJointedArmSim hoodMotorSim;
     private Notifier simNotifier;
     private double m_lastSimTime;
-    private double kSimLoopPeriod = 0.004;
+    private double kSimLoopPeriod = Constants.SIM_LOOP_PERIOD;
     
     public HoodIOSim() {
         motor = DCMotor.getKrakenX44Foc(1);

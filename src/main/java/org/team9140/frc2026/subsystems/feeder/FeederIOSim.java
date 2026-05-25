@@ -1,5 +1,7 @@
 package org.team9140.frc2026.subsystems.feeder;
 
+import org.team9140.frc2026.Constants;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.sim.ChassisReference;
 
@@ -13,7 +15,7 @@ public class FeederIOSim extends FeederIOReal{
     private final DCMotorSim feederSim;
     private Notifier simNotifier;
     private double m_lastSimTime;
-    private double kSimLoopPeriod = 0.004;
+    private double kSimLoopPeriod = Constants.SIM_LOOP_PERIOD;
 
     public FeederIOSim() {
         motor = DCMotor.getKrakenX60Foc(1);
