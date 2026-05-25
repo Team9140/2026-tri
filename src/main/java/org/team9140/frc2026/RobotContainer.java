@@ -20,6 +20,10 @@ import org.team9140.frc2026.subsystems.roller.Roller;
 import org.team9140.frc2026.subsystems.roller.RollerIO;
 import org.team9140.frc2026.subsystems.roller.RollerIOReal;
 import org.team9140.frc2026.subsystems.roller.RollerIOSim;
+import org.team9140.frc2026.subsystems.shooter.Shooter;
+import org.team9140.frc2026.subsystems.shooter.ShooterIO;
+import org.team9140.frc2026.subsystems.shooter.ShooterIOReal;
+import org.team9140.frc2026.subsystems.shooter.ShooterIOSim;
 import org.team9140.frc2026.subsystems.spinner.Spinner;
 import org.team9140.frc2026.subsystems.spinner.SpinnerIO;
 import org.team9140.frc2026.subsystems.spinner.SpinnerIOReal;
@@ -42,13 +46,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
+  private final CommandXboxController controller =
       new CommandXboxController(0);
 
   private final Roller roller;
   private final Extender extender;
   private final Turret turret;
   private final Hood hood;
+  private final Shooter shooter;
   private final Spinner spinner;
   private final Feeder feeder;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -59,6 +64,7 @@ public class RobotContainer {
         extender = new Extender(new ExtenderIOReal());
         turret = new Turret(new TurretIOReal());
         hood = new Hood(new HoodIOReal());
+        shooter = new Shooter(new ShooterIOReal());
         spinner = new Spinner(new SpinnerIOReal());
         feeder = new Feeder(new FeederIOReal());
       }
@@ -67,14 +73,16 @@ public class RobotContainer {
         extender = new Extender(new ExtenderIOSim());
         turret = new Turret(new TurretIOSim());
         hood = new Hood(new HoodIOSim());
+        shooter = new Shooter(new ShooterIOSim());
         spinner = new Spinner(new SpinnerIOSim());
         feeder = new Feeder(new FeederIOSim());
       }
-      default -> { // This is replay but ide says it needs a default case
+      default -> { // This is replay but we need a default case for it to work
         roller = new Roller(new RollerIO() {});
         extender = new Extender(new ExtenderIO() {});
         turret = new Turret(new TurretIO() {});
         hood = new Hood(new HoodIO() {});
+        shooter = new Shooter(new ShooterIO() {});
         spinner = new Spinner(new SpinnerIO() {});
         feeder = new Feeder(new FeederIO() {});
       }

@@ -80,17 +80,19 @@ public final class Constants {
     }
 
     public static class Shooter {
-        public static final double PEAK_FORWARD_TORQUE = 70.0;
-        public static final double IDLE_VOLTAGE = 4.0;
+        public static final double PEAK_FORWARD_TORQUE = 70.0; // is also used for stator current limit? idk why
+        public static final double PEAK_REVERSE_TORQUE = 0.0;
 
-        public static final double SHOOTER_KS = 0;
-        public static final double SHOOTER_KV = 0;
-        public static final double SHOOTER_KA = 0;
-        public static final double SHOOTER_KP = 100;
-        public static final double SHOOTER_KI = 0;
-        public static final double SHOOTER_KD = 0;
+        public static final double SUPPLY_CURRENT_LIMIT = 40.0;
 
-        public static final double FLYWHEEL_GEAR_RATIO = 26.0 / 24.0;
+        public static final double KS = 0;
+        public static final double KV = 0;
+        public static final double KA = 0;
+        public static final double KP = 100;
+        public static final double KI = 0;
+        public static final double KD = 0;
+
+        public static final double GEAR_RATIO = 26.0 / 24.0;
 
         public static final double AUTO_IDLE_TIMESTAMP = 2;
     }
