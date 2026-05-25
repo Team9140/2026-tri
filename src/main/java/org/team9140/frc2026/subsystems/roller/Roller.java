@@ -20,7 +20,7 @@ public class Roller extends SubsystemBase{
         Logger.processInputs("Roller", inputs);
     }
 
-    public Command stop() {
+    public Command off() {
         return this.runOnce(() -> {
             roller.off();
         });
