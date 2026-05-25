@@ -4,12 +4,15 @@
 
 package org.team9140.frc2026;
 
+import org.team9140.frc2026.generated.TunerConstants;
+
 import com.ctre.phoenix6.CANBus;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -53,11 +56,10 @@ public final class Constants {
     }
 
     public static class Drive {
-        // TODO: Replace when drivetrain figured out
-        //public static double MAX_TELEOP_VELOCITY = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.9;
+        public static double MAX_TELEOP_VELOCITY = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.9;
         public static double MAX_TELEOP_ROTATION = Math.toRadians(360);
 
-        //public static double MAX_VELOCITY = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+        public static double MAX_VELOCITY = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
 
         public static double MIN_TELEOP_VELOCITY = 0.05;
         public static double MIN_TELEOP_ROTATION = Math.toRadians(2);

@@ -4,6 +4,9 @@
 
 package org.team9140.frc2026;
 
+import org.team9140.frc2026.generated.TunerConstants;
+import org.team9140.frc2026.subsystems.drive.CommandSwerveDrivetrain;
+import org.team9140.frc2026.subsystems.drive.SwerveDriveIO;
 import org.team9140.frc2026.subsystems.extender.Extender;
 import org.team9140.frc2026.subsystems.extender.ExtenderIO;
 import org.team9140.frc2026.subsystems.extender.ExtenderIOReal;
@@ -56,6 +59,7 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Spinner spinner;
   private final Feeder feeder;
+  private final CommandSwerveDrivetrain drivetrain;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -67,6 +71,7 @@ public class RobotContainer {
         shooter = new Shooter(new ShooterIOReal());
         spinner = new Spinner(new SpinnerIOReal());
         feeder = new Feeder(new FeederIOReal());
+        drivetrain = new CommandSwerveDrivetrain(TunerConstants.createRealDrivetrain());
       }
       case SIM -> {
         roller = new Roller(new RollerIOSim());
@@ -76,6 +81,7 @@ public class RobotContainer {
         shooter = new Shooter(new ShooterIOSim());
         spinner = new Spinner(new SpinnerIOSim());
         feeder = new Feeder(new FeederIOSim());
+        drivetrain = new CommandSwerveDrivetrain(TunerConstants.createSimDrivetrain());
       }
       default -> { // This is replay but we need a default case for it to work
         roller = new Roller(new RollerIO() {});
@@ -85,6 +91,7 @@ public class RobotContainer {
         shooter = new Shooter(new ShooterIO() {});
         spinner = new Spinner(new SpinnerIO() {});
         feeder = new Feeder(new FeederIO() {});
+        drivetrain = new CommandSwerveDrivetrain(new SwerveDriveIO() {});
       }
 
     }
