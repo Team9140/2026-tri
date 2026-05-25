@@ -1,61 +1,55 @@
 package org.team9140.frc2026.subsystems.shooter;
 
-import org.team9140.frc2026.Constants;
+import org.team9140.frc2026.Constants.Shooter;
+
+import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.sim.TalonFXSimState;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
-public class ShooterIOSim implements ShooterIO {
-    private final DCMotor motor;
+public class ShooterIOSim extends ShooterIOReal {
+    private final DCMotor simMotor;
     private final DCMotorSim shooterMotorSim;
-    private boolean coastingOut;
-    private double goal;
+    private Notifier simNotifier;
+    private double m_lastSimTime;
+    private double kSimLoopPeriod = 0.004;
 
     public ShooterIOSim() {
-        motor = DCMotor.getKrakenX60Foc(2);
+        super(); // Sets up config stuff
+        simMotor = DCMotor.getKrakenX60Foc(2);
         shooterMotorSim = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(motor, 0.01, 1),
-            motor);
+            LinearSystemId.createDCMotorSystem(simMotor, 0.0024, 1),
+            simMotor);
         
+        m_lastSimTime = Utils.getCurrentTimeSeconds();
+        simNotifier = new Notifier(() -> {
+            final double currentTime = Utils.getCurrentTimeSeconds();
+            double deltaTime = currentTime - m_lastSimTime;
+            m_lastSimTime = currentTime;
+
+            /* use the measured time delta, get battery voltage from WPILib */
+            updateSimState(deltaTime);
+        });
+
+        simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
-    @Override
-    public void updateInputs(ShooterIOInputs inputs) {
-        double appliedVoltage = 0.0;
-        double shooterVelocity = shooterMotorSim.getAngularVelocityRPM() / 60.0;
-        if (!(DriverStation.isDisabled() || coastingOut)) {
-            if (shooterVelocity < goal) {
-                appliedVoltage = 12;
-            }
-        }
-        shooterMotorSim.setInputVoltage(appliedVoltage);
+    private void updateSimState(double dt) {
+        TalonFXSimState shooterMotorSimState = shooterMotor.getSimState();
+        double shooterSimVolts = shooterMotorSimState.getMotorVoltage();
+        shooterMotorSim.setInputVoltage(shooterSimVolts);
 
-        inputs.connected = true;
-        inputs.velocityRotsPerSec = shooterVelocity;
-        inputs.appliedVoltage = appliedVoltage;
-        inputs.supplyCurrentAmps = shooterMotorSim.getCurrentDrawAmps();
-        inputs.torqueCurrentAmps = motor.getCurrent(shooterMotorSim.getTorqueNewtonMeters());
-        inputs.tempCelsius = 0.0;
+        shooterMotorSim.update(dt);
 
-        inputs.followerConnected = true;
-        inputs.followerAppliedVoltage = appliedVoltage;
-        inputs.followerSupplyCurrentAmps = shooterMotorSim.getCurrentDrawAmps();
-        inputs.followerTorqueCurrentAmps = motor.getCurrent(shooterMotorSim.getTorqueNewtonMeters());
-        inputs.followerTempCelsius = 0.0;
-
-        shooterMotorSim.update(Constants.LOOP_PERIOD);
-    }
-
-    @Override
-    public void goToVelocity(double velocityRotsPerSec) {
-        coastingOut = false;
-        goal = velocityRotsPerSec;
-    }
-
-    @Override
-    public void off() {
-        coastingOut = true;
+        shooterMotorSimState.setRawRotorPosition(
+                shooterMotorSim.getAngularPositionRotations() * Shooter.GEAR_RATIO);
+        shooterMotorSimState.setRotorVelocity(
+                shooterMotorSim.getAngularVelocityRPM() / 60.0 * Shooter.GEAR_RATIO);
+        shooterMotorSimState.setRotorAcceleration(
+                shooterMotorSim.getAngularAccelerationRadPerSecSq()
+                        * Shooter.GEAR_RATIO / 2.0 / Math.PI);
     }
 }

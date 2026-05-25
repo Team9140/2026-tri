@@ -29,8 +29,8 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
 public class ShooterIOReal implements ShooterIO{
-    private final TalonFX shooterMotor;
-    private final TalonFX shooterFollower;
+    protected final TalonFX shooterMotor;
+    protected final TalonFX shooterFollower;
     private final VelocityTorqueCurrentFOC shooterController;
     private final CoastOut shooterCoastOut;
 
