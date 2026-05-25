@@ -28,7 +28,7 @@ import org.team9140.frc2026.Constants.Ports;
 import org.team9140.lib.Util;
 
 public class ExtenderIOReal implements ExtenderIO{
-    private final TalonFX extenderMotor;
+    protected final TalonFX extenderMotor;
     private final MotionMagicTorqueCurrentFOC motionMagic = new MotionMagicTorqueCurrentFOC(0);
     private final MotionMagicConfigs motionMagicConfigs;
 
@@ -78,7 +78,7 @@ public class ExtenderIOReal implements ExtenderIO{
                         .withSensorToMechanismRatio(Constants.Extender.GEAR_RATIO))
                 .withTorqueCurrent(torqueCurrentConfigs);
         
-        this.extenderMotor.getConfigurator().apply(motorConfigs);
+        Util.tryUntilOk(() -> this.extenderMotor.getConfigurator().apply(motorConfigs));
 
         // fetch main motor's signals
         this.motorPosition = this.extenderMotor.getPosition(false);

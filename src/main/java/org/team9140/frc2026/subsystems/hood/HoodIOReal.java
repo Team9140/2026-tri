@@ -33,8 +33,8 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
 public class HoodIOReal implements HoodIO{
-    private final TalonFX hoodMotor;
-    private final CANcoder hoodCANcoder;
+    protected final TalonFX hoodMotor;
+    protected final CANcoder hoodCANcoder;
     private final MotionMagicTorqueCurrentFOC MMcontroller;
 
     private final StatusSignal<Angle> hoodAngle;

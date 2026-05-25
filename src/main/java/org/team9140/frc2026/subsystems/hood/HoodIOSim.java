@@ -1,25 +1,27 @@
 package org.team9140.frc2026.subsystems.hood;
 
-import org.team9140.frc2026.Constants;
 import org.team9140.frc2026.Constants.Hood;
 import org.team9140.lib.Util;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
+import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.sim.ChassisReference;
+
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
-public class HoodIOSim implements HoodIO{
+public class HoodIOSim extends HoodIOReal{
     private final DCMotor motor;
     private final SingleJointedArmSim hoodMotorSim;
-    private final ProfiledPIDController controller;
+    private Notifier simNotifier;
+    private double m_lastSimTime;
+    private double kSimLoopPeriod = 0.004;
     
     public HoodIOSim() {
-        motor = DCMotor.getKrakenX60Foc(1);
+        motor = DCMotor.getKrakenX44Foc(1);
         hoodMotorSim = new SingleJointedArmSim(
             motor,
-            60,
+            Hood.GEAR_RATIO,
             1,
             0.2,
             0,
@@ -27,45 +29,50 @@ public class HoodIOSim implements HoodIO{
             false,
             0);
 
-        controller = new ProfiledPIDController(
-                Hood.SIM_KP,
-                Hood.SIM_KI,
-                Hood.SIM_KD,
-                new TrapezoidProfile.Constraints(Hood.MM_CRUISE_VELOCITY, Hood.MM_ACCELERATION),
-                Constants.LOOP_PERIOD
-        );
-        controller.setGoal(0);
+        hoodMotor.getSimState().Orientation = ChassisReference.CounterClockwise_Positive;
+        hoodCANcoder.getSimState().Orientation = ChassisReference.CounterClockwise_Positive;
+        hoodCANcoder.getSimState().SensorOffset = Hood.CANCODER_OFFSET_ROTS;
+
+        m_lastSimTime = Utils.getCurrentTimeSeconds();
+        simNotifier = new Notifier(() -> {
+            final double currentTime = Utils.getCurrentTimeSeconds();
+            double deltaTime = currentTime - m_lastSimTime;
+            m_lastSimTime = currentTime;
+
+            /* use the measured time delta, get battery voltage from WPILib */
+            updateSimState(deltaTime);
+        });
+
+        simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
-    @Override
-    public void updateInputs(HoodIOInputs inputs) {
-        double hoodAngle = hoodMotorSim.getAngleRads() / 2 / Math.PI;
-        double appliedVoltage = 0.0;
-        if (DriverStation.isDisabled()) {
-            appliedVoltage = 0.0;
-        }
-        else {
-            appliedVoltage = Util.clamp(controller.calculate(hoodAngle), 12);
-        }
-        hoodMotorSim.setInputVoltage(appliedVoltage);
+    private void updateSimState(double dt) {
+        double hoodMotorVolts = hoodMotor.getSimState().getMotorVoltage();
+        // The kP is really high so the only way I could get it to stop occilating was to do this
+        // Changing the arm sim constants wouldn't get it to stop
+        hoodMotorSim.setInputVoltage(addFriction(Util.clamp(hoodMotorVolts, 0.27), 0.07));
+        hoodMotorSim.update(dt);
 
-        inputs.connected = true;
-        inputs.appliedVoltage = appliedVoltage;
-        inputs.hoodAngleRotations = hoodAngle;
-        inputs.supplyCurrentAmps = hoodMotorSim.getCurrentDrawAmps();
-        inputs.torqueCurrentAmps = 0.0; // idk how to get this from sim
-        inputs.tempCelsius = 0.0;
-
-        // Not simulating the CANcoder
-        inputs.CANcoderAbsolutePositionRot = 0.0;
-        inputs.CANcoderPositionRot = 0.0;
-        inputs.CANcoderConnected = false;
-
-        hoodMotorSim.update(Constants.LOOP_PERIOD);
+        hoodMotor.getSimState().setRawRotorPosition(
+                hoodMotorSim.getAngleRads() * Hood.GEAR_RATIO / 2.0 / Math.PI);
+        hoodMotor.getSimState().setRotorVelocity(
+                hoodMotorSim.getVelocityRadPerSec() * Hood.GEAR_RATIO / 2.0 / Math.PI);
+        
+        hoodCANcoder.getSimState().setRawPosition(
+            hoodMotorSim.getAngleRads() / 2.0 / Math.PI * Hood.SENSOR_TO_MECHANISM_RATIO);
+        hoodCANcoder.getSimState().setVelocity(
+            hoodMotorSim.getVelocityRadPerSec() / 2.0 / Math.PI * Hood.SENSOR_TO_MECHANISM_RATIO);
     }
 
-    @Override
-    public void moveToPosition(double angleRotations) {
-        controller.setGoal(angleRotations);
+    // I saw poofs do this with their turret sim, and it got ours to act more normal
+    private double addFriction(double motorVoltage, double frictionVoltage) {
+        if (Math.abs(motorVoltage) < frictionVoltage) {
+            motorVoltage = 0.0;
+        } else if (motorVoltage > 0.0) {
+            motorVoltage -= frictionVoltage;
+        } else {
+            motorVoltage += frictionVoltage;
+        }
+        return motorVoltage;
     }
 }

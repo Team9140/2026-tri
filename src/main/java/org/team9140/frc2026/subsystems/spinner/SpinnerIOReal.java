@@ -22,7 +22,7 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
 public class SpinnerIOReal implements SpinnerIO{
-    private final TalonFX spinnerMotor;
+    protected final TalonFX spinnerMotor;
     private final VoltageOut voltageController;
 
     private final StatusSignal<Voltage> appliedVoltage;

@@ -22,7 +22,7 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
 public class FeederIOReal implements FeederIO{
-    private final TalonFX feederMotor;
+    protected final TalonFX feederMotor;
     private final VoltageOut voltageController;
 
     private final StatusSignal<Voltage> appliedVoltage;

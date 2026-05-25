@@ -1,51 +1,49 @@
 package org.team9140.frc2026.subsystems.roller;
 
-import org.team9140.frc2026.Constants;
+import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.sim.ChassisReference;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
-public class RollerIOSim implements RollerIO {
+public class RollerIOSim extends RollerIOReal {
     private final DCMotorSim rollerSim;
     private final DCMotor motor;
+    private Notifier simNotifier;
+    private double m_lastSimTime;
+    private double kSimLoopPeriod = 0.004;
 
     public RollerIOSim() {
         motor = DCMotor.getKrakenX60Foc(1);
         rollerSim = new DCMotorSim(
             LinearSystemId.createDCMotorSystem(motor, 0.0005, 1),
             motor);
+        
+        rollerMotor.getSimState().Orientation = ChassisReference.CounterClockwise_Positive;
+        
+        m_lastSimTime = Utils.getCurrentTimeSeconds();
+        simNotifier = new Notifier(() -> {
+            final double currentTime = Utils.getCurrentTimeSeconds();
+            double deltaTime = currentTime - m_lastSimTime;
+            m_lastSimTime = currentTime;
+
+            /* use the measured time delta, get battery voltage from WPILib */
+            updateSimState(deltaTime);
+        });
+
+        simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
-    @Override
-    public void updateInputs(RollerIOInputs inputs) {
-        if (DriverStation.isDisabled()) {
-            off();
-        }
-        rollerSim.update(Constants.LOOP_PERIOD);
-
-        inputs.connected = true;
-        inputs.appliedVoltage = rollerSim.getInputVoltage();
-        inputs.supplyCurrentAmps = rollerSim.getCurrentDrawAmps();
-        inputs.torqueCurrentAmps = motor.getCurrent(rollerSim.getTorqueNewtonMeters());
-        inputs.tempCelsius = 0.0;
-
-        // update follower motor inputs
-        inputs.followerConnected = true;
-        inputs.followerAppliedVoltage = rollerSim.getInputVoltage();
-        inputs.followerSupplyCurrentAmps = rollerSim.getCurrentDrawAmps();
-        inputs.followerTorqueCurrentAmps = motor.getCurrent(rollerSim.getTorqueNewtonMeters());
-        inputs.followerTempCelsius = 0.0;
-    }
-
-    @Override
-    public void runVoltage(double voltage) {
-        rollerSim.setInputVoltage(voltage);
-    }
-
-    @Override
-    public void off() {
-        runVoltage(0);
+    private void updateSimState(double dt) {
+        double rollerVolts = this.rollerMotor.getSimState().getMotorVoltage();
+        this.rollerSim.setInputVoltage(rollerVolts);
+        this.rollerSim.update(dt);
+        // update motor position
+        this.rollerMotor.getSimState().setRawRotorPosition(this.rollerSim.getAngularPositionRotations());
+        this.rollerMotor.getSimState().setRotorVelocity(this.rollerSim.getAngularVelocityRPM() / 60.0);
+        this.rollerMotor.getSimState().setRotorAcceleration(
+                this.rollerSim.getAngularAccelerationRadPerSecSq() / 2.0 / Math.PI);
     }
 }

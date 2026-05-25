@@ -1,22 +1,20 @@
 package org.team9140.frc2026.subsystems.turret;
 
-import org.team9140.frc2026.Constants;
 import org.team9140.frc2026.Constants.Turret;
-import org.team9140.lib.Util;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
+import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.sim.ChassisReference;
+
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 
-public class TurretIOSim implements TurretIO{
+public class TurretIOSim extends TurretIOReal{
     private final SingleJointedArmSim turretMotorSim;
     private final DCMotor motor;
-    
-    private final ProfiledPIDController controller;
-    private boolean usingVoltage;
-    private double requestedVoltage;
+    private Notifier simNotifier;
+    private double m_lastSimTime;
+    private double kSimLoopPeriod = 0.004;
 
     public TurretIOSim () {
         motor = DCMotor.getKrakenX60Foc(1);
@@ -29,62 +27,36 @@ public class TurretIOSim implements TurretIO{
                 200 * Math.PI / 180.0,
                 false,
                 0);
+
+        turretMotor.getSimState().Orientation = ChassisReference.CounterClockwise_Positive;
+        turretCANcoder.getSimState().Orientation = ChassisReference.CounterClockwise_Positive;
+        turretCANcoder.getSimState().SensorOffset = Turret.CANCODER_OFFSET_ROTS;
         
-        controller = new ProfiledPIDController(
-                Turret.SIM_KP,
-                Turret.SIM_KI,
-                Turret.SIM_KD,
-                new TrapezoidProfile.Constraints(Turret.MM_CRUISE_VELOCITY, Turret.MM_ACCELERATION),
-                Constants.LOOP_PERIOD
-        );
+        m_lastSimTime = Utils.getCurrentTimeSeconds();
+        simNotifier = new Notifier(() -> {
+            final double currentTime = Utils.getCurrentTimeSeconds();
+            double deltaTime = currentTime - m_lastSimTime;
+            m_lastSimTime = currentTime;
+
+            /* use the measured time delta, get battery voltage from WPILib */
+            updateSimState(deltaTime);
+        });
+
+        simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
-    @Override
-    public void updateInputs(TurretIOInputs inputs) {
-        double turretPos = turretMotorSim.getAngleRads() / 2 / Math.PI;
-        double appliedVolts = 0.0;
-        if (DriverStation.isDisabled()) {
-            appliedVolts = 0.0;
-        }
-        else if (!usingVoltage){
-            appliedVolts = Util.clamp(controller.calculate(turretPos), 12);
-        }
-        else {
-            appliedVolts = requestedVoltage;
-        }
-        turretMotorSim.setInputVoltage(appliedVolts);
-
-        inputs.connected = true;
-        inputs.appliedVoltage = appliedVolts;
-        inputs.turretAngleRotations = turretPos;
-        inputs.supplyCurrentAmps = turretMotorSim.getCurrentDrawAmps();
-        inputs.torqueCurrentAmps = 0.0; // idk how to get this from sim
-        inputs.tempCelsius = 0.0;
-
-        // Not simulating the CANcoder
-        inputs.CANcoderAbsolutePositionRot = 0.0;
-        inputs.CANcoderPositionRot = 0.0;
-        inputs.CANcoderConnected = false;
-
-        turretMotorSim.update(Constants.LOOP_PERIOD);
+    private void updateSimState(double dt) {
+        double turretSimVolts = turretMotor.getSimState().getMotorVoltage();
+        turretMotorSim.setInputVoltage(turretSimVolts);
+        turretMotorSim.update(dt);
+         
+        turretMotor.getSimState().setRawRotorPosition(
+                turretMotorSim.getAngleRads() * Turret.GEAR_RATIO / 2.0 / Math.PI);
+        turretMotor.getSimState().setRotorVelocity(
+                turretMotorSim.getVelocityRadPerSec() * Turret.GEAR_RATIO / 2.0 / Math.PI);
+        turretCANcoder.getSimState().setRawPosition(
+            turretMotorSim.getAngleRads() / 2.0 / Math.PI * Turret.SENSOR_TO_MECHANISM);
+        turretCANcoder.getSimState().setVelocity(
+            turretMotorSim.getVelocityRadPerSec() / 2.0 / Math.PI * Turret.SENSOR_TO_MECHANISM);
     }
-
-    @Override
-    public void moveToPosition(double positionRot) {
-        controller.setGoal(positionRot);
-        usingVoltage = false;
-    }
-
-    @Override
-    public void runVoltage(double voltage) {
-        requestedVoltage = voltage;
-        usingVoltage = true;
-    }
-
-    @Override
-    public void brake() {
-        runVoltage(0);
-    }
-
-
 }

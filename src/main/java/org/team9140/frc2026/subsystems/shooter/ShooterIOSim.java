@@ -3,7 +3,7 @@ package org.team9140.frc2026.subsystems.shooter;
 import org.team9140.frc2026.Constants.Shooter;
 
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.sim.TalonFXSimState;
+import com.ctre.phoenix6.sim.ChassisReference;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -23,6 +23,7 @@ public class ShooterIOSim extends ShooterIOReal {
         shooterMotorSim = new DCMotorSim(
             LinearSystemId.createDCMotorSystem(simMotor, 0.0024, 1),
             simMotor);
+        shooterMotor.getSimState().Orientation = ChassisReference.Clockwise_Positive;
         
         m_lastSimTime = Utils.getCurrentTimeSeconds();
         simNotifier = new Notifier(() -> {
@@ -38,17 +39,16 @@ public class ShooterIOSim extends ShooterIOReal {
     }
 
     private void updateSimState(double dt) {
-        TalonFXSimState shooterMotorSimState = shooterMotor.getSimState();
-        double shooterSimVolts = shooterMotorSimState.getMotorVoltage();
+        double shooterSimVolts = shooterMotor.getSimState().getMotorVoltage();
         shooterMotorSim.setInputVoltage(shooterSimVolts);
 
         shooterMotorSim.update(dt);
 
-        shooterMotorSimState.setRawRotorPosition(
+        shooterMotor.getSimState().setRawRotorPosition(
                 shooterMotorSim.getAngularPositionRotations() * Shooter.GEAR_RATIO);
-        shooterMotorSimState.setRotorVelocity(
+        shooterMotor.getSimState().setRotorVelocity(
                 shooterMotorSim.getAngularVelocityRPM() / 60.0 * Shooter.GEAR_RATIO);
-        shooterMotorSimState.setRotorAcceleration(
+        shooterMotor.getSimState().setRotorAcceleration(
                 shooterMotorSim.getAngularAccelerationRadPerSecSq()
                         * Shooter.GEAR_RATIO / 2.0 / Math.PI);
     }

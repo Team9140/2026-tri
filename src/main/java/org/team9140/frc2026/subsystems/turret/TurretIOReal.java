@@ -34,8 +34,8 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
 public class TurretIOReal implements TurretIO{
-    private final TalonFX turretMotor;
-    private final CANcoder turretCANcoder;
+    protected final TalonFX turretMotor;
+    protected final CANcoder turretCANcoder;
     private final MotionMagicTorqueCurrentFOC MMControl;
     private final VoltageOut voltageControl;
     private final StaticBrake brake;

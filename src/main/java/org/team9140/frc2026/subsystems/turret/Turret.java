@@ -60,7 +60,7 @@ public class Turret extends SubsystemBase {
             this.targetPosition = 0.0;
         });
     }
-/* For testing purposes
+ // For testing purposes
     public Command goTo180() {
         return this.runOnce(() -> {
             if (this.isManual) return;
@@ -68,7 +68,7 @@ public class Turret extends SubsystemBase {
             this.targetPosition = 0.5;
         });
     }
-*/
+
     
     
 }

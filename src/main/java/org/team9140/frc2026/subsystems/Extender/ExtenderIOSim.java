@@ -1,72 +1,60 @@
 package org.team9140.frc2026.subsystems.extender;
 
-import org.team9140.frc2026.Constants;
-import org.team9140.lib.Util;
+import org.team9140.frc2026.Constants.Extender;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
+import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.sim.ChassisReference;
+
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 
-public class ExtenderIOSim implements ExtenderIO {
+public class ExtenderIOSim extends ExtenderIOReal{
     private final ElevatorSim extenderSim;
     private final DCMotor motor;
-    
-    private final ProfiledPIDController pidController;
-    
+    private Notifier simNotifier;
+    private double m_lastSimTime;
+    private double kSimLoopPeriod = 0.004;
+
 
     public ExtenderIOSim() {
-        motor = DCMotor.getKrakenX44(1);
+        motor = DCMotor.getKrakenX60Foc(1);
         extenderSim = new ElevatorSim(motor,
-            Constants.Extender.GEAR_RATIO,
-            10,
-            Constants.Extender.PINION_CIRCUMFERENCE / Math.PI / 2.0,
-            Constants.Extender.REVERSE_SOFT_LIMIT_THRESHOLD,
-            Constants.Extender.ARM_OUT_POSITION,
+            Extender.GEAR_RATIO,
+            1,
+            Extender.PINION_CIRCUMFERENCE / Math.PI / 2.0,
+            Extender.REVERSE_SOFT_LIMIT_THRESHOLD,
+            Extender.ARM_OUT_POSITION,
             false,
             0);
-
-        pidController = new ProfiledPIDController(
-            Constants.Extender.SIM_KP, 
-            0.0, 
-            0.0, 
-            new TrapezoidProfile.Constraints(
-                Constants.Extender.ARM_OUT_VELOCITY, 
-                Constants.Extender.MM_ACCELERATION
-            ), 
-            Constants.LOOP_PERIOD
-        );
-    }
-
-    @Override
-    public void updateInputs(ExtenderIOInputs inputs) {
-        double intakePos = extenderSim.getPositionMeters();
-
-        double appliedVolts = 0.0;
-        if (DriverStation.isDisabled()) {
-            appliedVolts = 0.0;
-        }
-        else {
-            appliedVolts = Util.clamp(pidController.calculate(intakePos / Constants.Extender.PINION_CIRCUMFERENCE), 12.0);
-        }
-        extenderSim.setInputVoltage(appliedVolts);
-
-        inputs.connected = true;
-        inputs.motorPosition = intakePos / Constants.Extender.PINION_CIRCUMFERENCE;
-        inputs.intakePosition = intakePos;
-        inputs.appliedVoltage = appliedVolts;
-        inputs.supplyCurrentAmps = extenderSim.getCurrentDrawAmps();
-        inputs.torqueCurrentAmps = 0; // I don't know what to do for this one
-        inputs.tempCelsius = 0.0;
         
+        this.extenderMotor.getSimState().Orientation = ChassisReference.CounterClockwise_Positive;
 
-        extenderSim.update(Constants.LOOP_PERIOD);
+        m_lastSimTime = Utils.getCurrentTimeSeconds();
+        simNotifier = new Notifier(() -> {
+            final double currentTime = Utils.getCurrentTimeSeconds();
+            double deltaTime = currentTime - m_lastSimTime;
+            m_lastSimTime = currentTime;
+
+            /* use the measured time delta, get battery voltage from WPILib */
+            updateSimState(deltaTime);
+        });
+
+        simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
-    @Override
-    public void goToPosition(double position, double maxVelocity) {
-        this.pidController.setConstraints(new TrapezoidProfile.Constraints(maxVelocity, Constants.Extender.MM_ACCELERATION));
-        this.pidController.setGoal(position / Constants.Extender.PINION_CIRCUMFERENCE);
+    private void updateSimState(double dt) {
+        double extendVolts = this.extenderMotor.getSimState().getMotorVoltage();
+        this.extenderSim.setInputVoltage(extendVolts);
+        this.extenderSim.update(dt);
+
+        double pos = this.extenderSim.getPositionMeters();
+        double vel = this.extenderSim.getVelocityMetersPerSecond();
+
+        this.extenderMotor.getSimState().setRawRotorPosition(
+                pos / Extender.PINION_CIRCUMFERENCE * Extender.GEAR_RATIO);
+        this.extenderMotor.getSimState()
+                .setRotorVelocity(vel / Extender.PINION_CIRCUMFERENCE
+                        * Extender.GEAR_RATIO);
     }
 }

@@ -32,6 +32,12 @@ public class Hood extends SubsystemBase{
         
     }
 
+    public Command test() {
+        return this.runOnce(() -> {
+            setHoodPosition(25);
+        });
+    }
+
     public Command off() {
         return this.runOnce(() -> {
             setHoodPosition(30);

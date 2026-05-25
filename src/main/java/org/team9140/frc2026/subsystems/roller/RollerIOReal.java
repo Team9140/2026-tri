@@ -23,8 +23,8 @@ import org.team9140.frc2026.Constants.Roller;
 import org.team9140.lib.Util;
 
 public class RollerIOReal implements RollerIO{
-    private final TalonFX rollerMotor;
-    private final TalonFX rollerFollowerMotor;
+    protected final TalonFX rollerMotor;
+    protected final TalonFX rollerFollowerMotor;
 
     private final StatusSignal<Voltage> appliedVoltage;
     private final StatusSignal<Current> supplyCurrent;
