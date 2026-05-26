@@ -96,8 +96,10 @@ public class RobotContainer {
 
     }
 
-    // Configure the trigger bindings
-    configureBindings();
+    // Set up subsystems
+    drivetrain.setJoystickInput(controller::getLeftX, controller::getLeftY, controller::getRightX);
+    turret.setRobotDataSuppliers(drivetrain::getDrivetrainPose, drivetrain::getDrivetrainSpeeds);
+    configureBindings(); // Configure the trigger bindings
   }
 
   /**
@@ -110,7 +112,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    drivetrain.setJoystickInput(controller::getLeftX, controller::getLeftY, controller::getRightX);
     drivetrain.setDefaultCommand(drivetrain.teleopDrive());
   }
 
