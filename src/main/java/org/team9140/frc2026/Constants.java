@@ -176,7 +176,7 @@ public final class Constants {
 
         public static final double FORWARD_SOFT_LIMIT_THRESHOLD = ARM_OUT_POSITION / PINION_CIRCUMFERENCE;
         public static final double REVERSE_SOFT_LIMIT_THRESHOLD = 0;
-
+        public static final double TOLERANCE = Units.inchesToMeters(0.5);
     }
 
     public static class Spinner {
