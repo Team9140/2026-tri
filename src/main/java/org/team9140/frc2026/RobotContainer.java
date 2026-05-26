@@ -64,6 +64,7 @@ public class RobotContainer {
   public RobotContainer() {
     switch (Constants.currentMode) {
       case REAL -> {
+        drivetrain = new CommandSwerveDrivetrain(TunerConstants.createRealDrivetrain());
         roller = new Roller(new RollerIOReal());
         extender = new Extender(new ExtenderIOReal());
         turret = new Turret(new TurretIOReal());
@@ -71,9 +72,9 @@ public class RobotContainer {
         shooter = new Shooter(new ShooterIOReal());
         spinner = new Spinner(new SpinnerIOReal());
         feeder = new Feeder(new FeederIOReal());
-        drivetrain = new CommandSwerveDrivetrain(TunerConstants.createRealDrivetrain());
       }
       case SIM -> {
+        drivetrain = new CommandSwerveDrivetrain(TunerConstants.createSimDrivetrain());
         roller = new Roller(new RollerIOSim());
         extender = new Extender(new ExtenderIOSim());
         turret = new Turret(new TurretIOSim());
@@ -81,9 +82,9 @@ public class RobotContainer {
         shooter = new Shooter(new ShooterIOSim());
         spinner = new Spinner(new SpinnerIOSim());
         feeder = new Feeder(new FeederIOSim());
-        drivetrain = new CommandSwerveDrivetrain(TunerConstants.createSimDrivetrain());
       }
       default -> { // This is replay but we need a default case for it to work
+        drivetrain = new CommandSwerveDrivetrain(new SwerveDriveIO() {});
         roller = new Roller(new RollerIO() {});
         extender = new Extender(new ExtenderIO() {});
         turret = new Turret(new TurretIO() {});
@@ -91,7 +92,6 @@ public class RobotContainer {
         shooter = new Shooter(new ShooterIO() {});
         spinner = new Spinner(new SpinnerIO() {});
         feeder = new Feeder(new FeederIO() {});
-        drivetrain = new CommandSwerveDrivetrain(new SwerveDriveIO() {});
       }
 
     }
