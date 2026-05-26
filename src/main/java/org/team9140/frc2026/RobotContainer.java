@@ -110,6 +110,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    drivetrain.setJoystickInput(controller::getLeftX, controller::getLeftY, controller::getRightX);
+    drivetrain.setDefaultCommand(drivetrain.teleopDrive());
   }
 
   /**
