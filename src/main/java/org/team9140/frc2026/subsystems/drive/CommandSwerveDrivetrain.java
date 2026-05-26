@@ -94,7 +94,7 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
             Drive.HEADING_CONTROLLER_I, Drive.HEADING_CONTROLLER_D);
         autonHeadingController.enableContinuousInput(-Math.PI, Math.PI);
 
-        reachedAutonPose = new Trigger(() -> Util.epsilonEquals(autonTargetPose, inputs.drivePose))
+        reachedAutonPose = new Trigger(() -> Util.epsilonEquals(autonTargetPose, inputs.Pose))
             .debounce(0.25, DebounceType.kBoth);
         
         /* Swerve requests to apply during SysId characterization */
@@ -168,9 +168,9 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
         drivetrain.updateInputs(inputs);
         Logger.processInputs("Drivetrain", inputs);
 
-        driveAutonXerror = autonTargetPose.getX() - inputs.drivePose.getX();
-        driveAutonYerror = autonTargetPose.getY() - inputs.drivePose.getY();
-        driveAutonThetaError = autonTargetPose.getRotation().getRotations() - inputs.drivePose.getRotation().getRotations();
+        driveAutonXerror = autonTargetPose.getX() - inputs.Pose.getX();
+        driveAutonYerror = autonTargetPose.getY() - inputs.Pose.getY();
+        driveAutonThetaError = autonTargetPose.getRotation().getRotations() - inputs.Pose.getRotation().getRotations();
     }
 
     /**
@@ -197,11 +197,11 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
 
     // We can add more getters if needed
     public Pose2d getDrivetrainPose() {
-        return inputs.drivePose;
+        return inputs.Pose;
     }
 
     public ChassisSpeeds getDrivetrainSpeeds() {
-        return inputs.driveSpeeds;
+        return inputs.Speeds;
     }
 
     private double startTime = 0.0;
@@ -266,7 +266,7 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
      * @param sample Provides sample to execute.
      */
     public void followSample(SwerveSample sample) {
-        Pose2d currPose = inputs.drivePose;
+        Pose2d currPose = inputs.Pose;
         Pose2d target = sample.getPose();
 
         this.autonTargetPose = target;
@@ -297,7 +297,7 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
             if (this.autonTargetPose == null)
                 return;
 
-            Pose2d pose = inputs.drivePose;
+            Pose2d pose = inputs.Pose;
             double currentTime = Utils.getCurrentTimeSeconds();
 
             double vx = 0.0, vy = 0.0, omega = 0.0;

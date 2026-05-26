@@ -23,13 +23,16 @@ public class SwerveDriveIOReal extends TunerSwerveDrivetrain implements SwerveDr
     @Override
     public void updateInputs(SwerveDriveIOInputs inputs) {
         SwerveDriveState driveState = this.getState();
-        inputs.drivePose = driveState.Pose;
-        inputs.driveSpeeds = driveState.Speeds;
-        inputs.driveModuleStates = driveState.ModuleStates;
-        inputs.driveModuleTargets = driveState.ModuleTargets;
-        inputs.driveModulePositions = driveState.ModulePositions;
-        inputs.driveTimestamp = driveState.Timestamp;
-        inputs.driveOdometryFrequency = 1.0 / driveState.OdometryPeriod;
+        inputs.Pose = driveState.Pose;
+        inputs.Speeds = driveState.Speeds;
+        inputs.ModuleStates = driveState.ModuleStates;
+        inputs.ModuleTargets = driveState.ModuleTargets;
+        inputs.ModulePositions = driveState.ModulePositions;
+        inputs.Timestamp = driveState.Timestamp;
+        inputs.OdometryPeriod = driveState.OdometryPeriod;
+        inputs.SuccessfulDaqs = driveState.SuccessfulDaqs;
+        inputs.FailedDaqs = driveState.FailedDaqs;
+        inputs.RawHeading = driveState.RawHeading;
     }
     
     @Override
