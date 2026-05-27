@@ -23,7 +23,7 @@ public class ShooterIOSim extends ShooterIOReal {
         simMotor = DCMotor.getKrakenX60Foc(2);
         // Moment of inertia is only from the brass flywheels, not from CAD
         shooterMotorSim = new FlywheelSim(
-            LinearSystemId.createFlywheelSystem(simMotor, 0.00117, Shooter.GEAR_RATIO), 
+            LinearSystemId.createFlywheelSystem(simMotor, 0.00117 * 2, Shooter.GEAR_RATIO), 
             simMotor);
         shooterMotor.getSimState().Orientation = ChassisReference.Clockwise_Positive;
         
