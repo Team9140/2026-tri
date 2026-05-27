@@ -79,6 +79,7 @@ public final class Constants {
         public static final double REACHEDPOSE_DEBOUNCE = 0.5;
         public static final double BRAKE_IDLE_TIME = 1.0;
         public static final double TELEOP_SHOOTING_VELOCITY_MULTIPLIER = 0.67;
+        public static final double CONTROLLER_DEADBAND = 0.12;
     }
 
     public static class Shooter {

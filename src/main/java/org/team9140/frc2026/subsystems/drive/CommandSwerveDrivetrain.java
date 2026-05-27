@@ -19,6 +19,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 
 import choreo.trajectory.SwerveSample;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -218,10 +219,10 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
             startTime = Utils.getSystemTimeSeconds();
         }).andThen(this.run(() -> {
             double vX = teleopVelocityMultiplier * Drive.MAX_TELEOP_VELOCITY
-                    * Util.applyDeadband(-this.leftStickY.getAsDouble());
+                    * MathUtil.applyDeadband(-this.leftStickY.getAsDouble(), Drive.CONTROLLER_DEADBAND);
             double vY = teleopVelocityMultiplier * Drive.MAX_TELEOP_VELOCITY
-                    * Util.applyDeadband(-this.leftStickX.getAsDouble());
-            double omega = Drive.MAX_TELEOP_ROTATION * Util.applyDeadband(-this.rightStickX.getAsDouble());
+                    * MathUtil.applyDeadband(-this.leftStickX.getAsDouble(), Drive.CONTROLLER_DEADBAND);
+            double omega = Drive.MAX_TELEOP_ROTATION * MathUtil.applyDeadband(-this.rightStickX.getAsDouble(), Drive.CONTROLLER_DEADBAND);
 
             if (vX == 0.0 && vY == 0.0 && omega == 0) {
                 if (Utils.getSystemTimeSeconds() - startTime >= Drive.BRAKE_IDLE_TIME) {
