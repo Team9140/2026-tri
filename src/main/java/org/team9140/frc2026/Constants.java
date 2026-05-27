@@ -147,6 +147,7 @@ public final class Constants {
         public static final double SENSOR_TO_MECHANISM_RATIO = 170.0 / 10.0 * 16.0 / 25.0;
         public static final double CANCODER_OFFSET_ROTS = -0.32;
         public static final double ANGLE_MIN = Units.degreesToRadians(18.0);
+        public static final double TOLERANCE_ROTATIONS = Units.degreesToRotations(2.0);
     }
 
     public static class Roller {

@@ -100,6 +100,7 @@ public class RobotContainer {
     drivetrain.setJoystickInput(controller::getLeftX, controller::getLeftY, controller::getRightX);
     turret.setRobotDataSuppliers(drivetrain::getDrivetrainPose, drivetrain::getDrivetrainSpeeds);
     shooter.setRobotDataSuppliers(drivetrain::getDrivetrainPose, drivetrain::getDrivetrainSpeeds);
+    hood.setRobotDataSuppliers(drivetrain::getDrivetrainPose, drivetrain::getDrivetrainSpeeds);
     configureBindings(); // Configure the trigger bindings
   }
 
