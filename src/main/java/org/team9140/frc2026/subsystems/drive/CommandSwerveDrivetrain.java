@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.Volts;
 
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -285,50 +284,4 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
                 .withVelocityY(vy));
     }
 
-    /**
-     * Follows the given field-centric path sample with PID.
-     *
-     * @param poses Provides poses to go to at any given time.
-     */
-    public Command goToPose(Supplier<Pose2d> poses) {
-        return this.run(() -> {
-            this.autonTargetPose = poses.get();
-
-            if (this.autonTargetPose == null)
-                return;
-
-            Pose2d pose = inputs.Pose;
-            double currentTime = Utils.getCurrentTimeSeconds();
-
-            double vx = 0.0, vy = 0.0, omega = 0.0;
-
-            if (!Util.epsilonEquals(pose.getX(), autonTargetPose.getX(), 0.01)) {
-                vx = autonXController.calculate(pose.getX(), this.autonTargetPose.getX(), currentTime);
-                // vx = Util.clamp(vx, 1.625);
-            }
-
-            if (!Util.epsilonEquals(pose.getY(), autonTargetPose.getY(), 0.01)) {
-                vy = autonYController.calculate(pose.getY(), this.autonTargetPose.getY(), currentTime);
-                // vy = Util.clamp(vy, 1.625);
-            }
-
-            double v = Math.hypot(vx, vy);
-
-            if (v >= 2.25) {
-                vx *= 2.25 / v;
-                vy *= 2.25 / v;
-            }
-
-            if (!Util.epsilonEquals(pose.getRotation().getDegrees(), autonTargetPose.getRotation().getDegrees(), 1.0)) {
-                omega = this.autonHeadingController.calculate(pose.getRotation().getRadians(),
-                        this.autonTargetPose.getRotation().getRadians(), currentTime);
-                omega = Util.clamp(omega, Math.toRadians(270.0));
-            }
-
-            drivetrain.setControl(this.auton
-                    .withRotationalRate(omega)
-                    .withVelocityX(vx)
-                    .withVelocityY(vy));
-        });
-    }
 }
