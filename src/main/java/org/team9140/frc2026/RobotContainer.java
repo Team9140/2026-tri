@@ -36,6 +36,8 @@ import org.team9140.frc2026.subsystems.turret.TurretIO;
 import org.team9140.frc2026.subsystems.turret.TurretIOReal;
 import org.team9140.frc2026.subsystems.turret.TurretIOSim;
 
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -47,11 +49,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController controller =
-      new CommandXboxController(0);
-
   private final Roller roller;
   private final Extender extender;
   private final Turret turret;
@@ -113,8 +110,40 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
+
+  private final CommandXboxController controller = new CommandXboxController(0);
+
   private void configureBindings() {
     drivetrain.setDefaultCommand(drivetrain.teleopDrive());
+
+    Trigger readyToShoot = hood.atPosition.and(shooter.atVelocity).and(turret.atPosition); // Should we ever debounce this?
+    Trigger wantAim = this.controller.rightTrigger(0.3).debounce(Constants.Turret.TURN_SHOOTER_OFF_TIME,
+        DebounceType.kFalling);
+    Trigger wantShoot = this.controller.rightTrigger(0.9);
+
+    Command aimOnCommand = turret.aim().alongWith(shooter.aim()).alongWith(hood.aim());
+    Command aimOffCommand = turret.off().alongWith(shooter.off()).alongWith(hood.off());
+    wantAim.onTrue(aimOnCommand).onFalse(aimOffCommand);
+
+    Command shootOnCommand = spinner.feed().alongWith(feeder.feed());
+    Command shootOffCommand = spinner.off().alongWith(feeder.reverseAndOff());
+    wantShoot.and(readyToShoot).onTrue(shootOnCommand).onFalse(shootOffCommand);
+
+    Trigger wantIntake = this.controller.rightBumper();
+    Trigger wantSqueeze = this.controller.leftBumper();
+
+    wantIntake.and(wantSqueeze.negate()).onTrue(extender.armOut().alongWith(roller.intake()))
+                                        .onFalse(roller.off());
+    wantSqueeze.onTrue(extender.armIn().alongWith(roller.intake()))
+               .onFalse(roller.off());
+    
+    // I don't think there's replacement for entering numbers yet so still using smart dashboard
+    SmartDashboard.putNumber("tuning RPM", 2500);
+    SmartDashboard.putNumber("tuning Angle", 24.0);
+    Command tuningCommand = turret.off()
+            .alongWith(shooter.tuning(() -> SmartDashboard.getNumber("tuning RPM", 2500)))
+            .alongWith(hood.tuning(() -> SmartDashboard.getNumber("tuning Angle", 24.0)));
+    this.controller.y().onTrue(tuningCommand).onFalse(aimOffCommand);
   }
 
   /**

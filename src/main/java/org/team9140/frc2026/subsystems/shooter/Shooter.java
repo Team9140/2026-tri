@@ -23,7 +23,7 @@ public class Shooter extends SubsystemBase{
     private double targetVelocity = 0.0;
     LinearFilter RPMFilter = LinearFilter.movingAverage(20);
     @AutoLogOutput
-    private final Trigger atVelocity = new Trigger(() -> {
+    public final Trigger atVelocity = new Trigger(() -> {
         return RPMFilter.calculate(inputs.velocityRotsPerSec) >= targetVelocity - 4.0;
     });
 

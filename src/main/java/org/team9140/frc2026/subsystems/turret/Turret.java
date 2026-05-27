@@ -25,7 +25,7 @@ public class Turret extends SubsystemBase {
     @AutoLogOutput
     private double targetPosition;
     @AutoLogOutput
-    private final Trigger atPosition = new Trigger(
+    public final Trigger atPosition = new Trigger(
             () -> Util.epsilonEquals(this.getPosition(),
                     targetPosition, Units.degreesToRotations(15.0)));
 
