@@ -1,0 +1,478 @@
+{
+ "name":"autos",
+ "version":2,
+ "type":"Swerve",
+ "variables":{
+  "expressions":{
+   "Shallow_X_value":{
+    "dimension":"Length",
+    "var":{
+     "exp":"7.2 m",
+     "val":7.2
+    }
+   },
+   "bump_velocity":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"3 m / s",
+     "val":3.0
+    }
+   },
+   "citrus_intake_velocity":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"2 m / s",
+     "val":2.0
+    }
+   },
+   "intake_velocity":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"1.5 m / s",
+     "val":1.5
+    }
+   },
+   "max_acceleration":{
+    "dimension":"LinAcc",
+    "var":{
+     "exp":"4 m / s ^ 2",
+     "val":4.0
+    }
+   },
+   "max_velocity":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"3.5 m / s",
+     "val":3.5
+    }
+   }
+  },
+  "poses":{
+   "Before_Getting_Depot":{
+    "x":{
+     "exp":"0.575 m",
+     "val":0.575
+    },
+    "y":{
+     "exp":"4.783404350280762 m",
+     "val":4.783404350280762
+    },
+    "heading":{
+     "exp":"90 deg",
+     "val":1.5707963267948966
+    }
+   },
+   "Blue_Depot":{
+    "x":{
+     "exp":"3.5149402618408203 m",
+     "val":3.5149402618408203
+    },
+    "y":{
+     "exp":"5.54520090082 m",
+     "val":5.54520090082
+    },
+    "heading":{
+     "exp":"0 rad",
+     "val":0.0
+    }
+   },
+   "Blue_Depot_Bump_End":{
+    "x":{
+     "exp":"2 m",
+     "val":2.0
+    },
+    "y":{
+     "exp":"5.6 m",
+     "val":5.6
+    },
+    "heading":{
+     "exp":"180 deg",
+     "val":3.141592653589793
+    }
+   },
+   "Blue_Depot_Trench":{
+    "x":{
+     "exp":"4.358846664428711 m",
+     "val":4.358846664428711
+    },
+    "y":{
+     "exp":"7.40605525970459 m",
+     "val":7.40605525970459
+    },
+    "heading":{
+     "exp":"0 deg",
+     "val":0.0
+    }
+   },
+   "Blue_Depot_Trench_End":{
+    "x":{
+     "exp":"3 m",
+     "val":3.0
+    },
+    "y":{
+     "exp":"7.5 m",
+     "val":7.5
+    },
+    "heading":{
+     "exp":"3.14 rad",
+     "val":3.14
+    }
+   },
+   "Blue_Middle":{
+    "x":{
+     "exp":"3.4551591873168945 m",
+     "val":3.4551591873168945
+    },
+    "y":{
+     "exp":"4.02463960647583 m",
+     "val":4.02463960647583
+    },
+    "heading":{
+     "exp":"180 deg",
+     "val":3.141592653589793
+    }
+   },
+   "Blue_Outpost":{
+    "x":{
+     "exp":"3.5344302654266357 m",
+     "val":3.5344302654266357
+    },
+    "y":{
+     "exp":"2.426675319671631 m",
+     "val":2.426675319671631
+    },
+    "heading":{
+     "exp":"0 rad",
+     "val":0.0
+    }
+   },
+   "Blue_Outpost_Bump_End":{
+    "x":{
+     "exp":"2 m",
+     "val":2.0
+    },
+    "y":{
+     "exp":"2.317690372467041 m",
+     "val":2.317690372467041
+    },
+    "heading":{
+     "exp":"180 deg",
+     "val":3.141592653589793
+    }
+   },
+   "Blue_Outpost_Trench":{
+    "x":{
+     "exp":"4.358846664428711 m",
+     "val":4.358846664428711
+    },
+    "y":{
+     "exp":"0.611431217193604 m",
+     "val":0.611431217193604
+    },
+    "heading":{
+     "exp":"0 deg",
+     "val":0.0
+    }
+   },
+   "Blue_Outpost_Trench_End":{
+    "x":{
+     "exp":"3.2 m",
+     "val":3.2
+    },
+    "y":{
+     "exp":"0.7 m",
+     "val":0.7
+    },
+    "heading":{
+     "exp":"180 deg",
+     "val":3.141592653589793
+    }
+   },
+   "CC_end1":{
+    "x":{
+     "exp":"5.75 m",
+     "val":5.75
+    },
+    "y":{
+     "exp":"5.593800067901611 m",
+     "val":5.593800067901611
+    },
+    "heading":{
+     "exp":"180 deg",
+     "val":3.141592653589793
+    }
+   },
+   "CC_end2":{
+    "x":{
+     "exp":"1.2435345649719238 m",
+     "val":1.2435345649719238
+    },
+    "y":{
+     "exp":"4.93506383895874 m",
+     "val":4.93506383895874
+    },
+    "heading":{
+     "exp":"90 deg",
+     "val":1.5707963267948966
+    }
+   },
+   "Deep_Depot_Finish":{
+    "x":{
+     "exp":"7.76035423278809 m",
+     "val":7.76035423278809
+    },
+    "y":{
+     "exp":"4.16970634460449 m",
+     "val":4.16970634460449
+    },
+    "heading":{
+     "exp":"90 deg",
+     "val":1.5707963267948966
+    }
+   },
+   "Deep_Depot_Start":{
+    "x":{
+     "exp":"7.781005477905273 m",
+     "val":7.781005477905273
+    },
+    "y":{
+     "exp":"6.701548099517822 m",
+     "val":6.701548099517822
+    },
+    "heading":{
+     "exp":"270 deg",
+     "val":4.71238898038469
+    }
+   },
+   "Deep_Outpost_Finish":{
+    "x":{
+     "exp":"7.788165664672852 m",
+     "val":7.788165664672852
+    },
+    "y":{
+     "exp":"3.763300657272339 m",
+     "val":3.763300657272339
+    },
+    "heading":{
+     "exp":"90 deg",
+     "val":1.5707963267948966
+    }
+   },
+   "Deep_Outpost_Start":{
+    "x":{
+     "exp":"7.727307891845703 m",
+     "val":7.727307891845703
+    },
+    "y":{
+     "exp":"1.3139550685882568 m",
+     "val":1.3139550685882568
+    },
+    "heading":{
+     "exp":"90 deg",
+     "val":1.5707963267948966
+    }
+   },
+   "Depot_Shot":{
+    "x":{
+     "exp":"2.38413143157959 m",
+     "val":2.38413143157959
+    },
+    "y":{
+     "exp":"6.104874610900879 m",
+     "val":6.104874610900879
+    },
+    "heading":{
+     "exp":"2.4 rad",
+     "val":2.4
+    }
+   },
+   "Depot_Trench_Start_Behind":{
+    "x":{
+     "exp":"3.358846664428711 m",
+     "val":3.358846664428711
+    },
+    "y":{
+     "exp":"7.40605525970459 m",
+     "val":7.40605525970459
+    },
+    "heading":{
+     "exp":"0 deg",
+     "val":0.0
+    }
+   },
+   "Neutral_Left_Bump":{
+    "x":{
+     "exp":"5.889936447143555 m",
+     "val":5.889936447143555
+    },
+    "y":{
+     "exp":"5.538114547729492 m",
+     "val":5.538114547729492
+    },
+    "heading":{
+     "exp":"180 deg",
+     "val":3.141592653589793
+    }
+   },
+   "Neutral_Right_Bump":{
+    "x":{
+     "exp":"5.8899359703063965 m",
+     "val":5.8899359703063965
+    },
+    "y":{
+     "exp":"2.3878941535949707 m",
+     "val":2.3878941535949707
+    },
+    "heading":{
+     "exp":"180 deg",
+     "val":3.141592653589793
+    }
+   },
+   "Outpost_Shot":{
+    "x":{
+     "exp":"2.38413143157959 m",
+     "val":2.38413143157959
+    },
+    "y":{
+     "exp":"2.349355936050415 m",
+     "val":2.349355936050415
+    },
+    "heading":{
+     "exp":"-2.5535905351314323 rad",
+     "val":-2.5535905351314323
+    }
+   },
+   "Shallow_Depot_Finish":{
+    "x":{
+     "exp":"Shallow_X_value",
+     "val":7.2
+    },
+    "y":{
+     "exp":"4 m",
+     "val":4.0
+    },
+    "heading":{
+     "exp":"90 deg",
+     "val":1.5707963267948966
+    }
+   },
+   "Shallow_Depot_Start":{
+    "x":{
+     "exp":"Shallow_X_value",
+     "val":7.2
+    },
+    "y":{
+     "exp":"6.90722485044 m",
+     "val":6.90722485044
+    },
+    "heading":{
+     "exp":"270 deg",
+     "val":4.71238898038469
+    }
+   },
+   "Shallow_Outpost_Finish":{
+    "x":{
+     "exp":"Shallow_X_value",
+     "val":7.2
+    },
+    "y":{
+     "exp":"4.068721771240234 m",
+     "val":4.068721771240234
+    },
+    "heading":{
+     "exp":"90 deg",
+     "val":1.5707963267948966
+    }
+   },
+   "Shallow_Outpost_Start":{
+    "x":{
+     "exp":"Shallow_X_value",
+     "val":7.2
+    },
+    "y":{
+     "exp":"1.159825086593628 m",
+     "val":1.159825086593628
+    },
+    "heading":{
+     "exp":"90 deg",
+     "val":1.5707963267948966
+    }
+   }
+  }
+ },
+ "config":{
+  "frontLeft":{
+   "x":{
+    "exp":"11 in",
+    "val":0.2794
+   },
+   "y":{
+    "exp":"11 in",
+    "val":0.2794
+   }
+  },
+  "backLeft":{
+   "x":{
+    "exp":"-11 in",
+    "val":-0.2794
+   },
+   "y":{
+    "exp":"11 in",
+    "val":0.2794
+   }
+  },
+  "mass":{
+   "exp":"150 lbs",
+   "val":68.0388555
+  },
+  "inertia":{
+   "exp":"6 kg m ^ 2",
+   "val":6.0
+  },
+  "gearing":{
+   "exp":"6.5",
+   "val":6.5
+  },
+  "radius":{
+   "exp":"2 in",
+   "val":0.0508
+  },
+  "vmax":{
+   "exp":"6000 RPM",
+   "val":628.3185307179587
+  },
+  "tmax":{
+   "exp":"1.2 N * m",
+   "val":1.2
+  },
+  "cof":{
+   "exp":"1.5",
+   "val":1.5
+  },
+  "bumper":{
+   "front":{
+    "exp":"17 in",
+    "val":0.4318
+   },
+   "side":{
+    "exp":"17 in",
+    "val":0.4318
+   },
+   "back":{
+    "exp":"17 in",
+    "val":0.4318
+   }
+  },
+  "differentialTrackWidth":{
+   "exp":"22 in",
+   "val":0.5588
+  }
+ },
+ "generationFeatures":[],
+ "codegen":{
+  "root":"..\\C:\\Users\\vatsh\\code\\frc\\2026\\src\\main\\deploy\\choreo",
+  "genVars":true,
+  "genTrajData":true,
+  "useChoreoLib":true
+ }
+}
