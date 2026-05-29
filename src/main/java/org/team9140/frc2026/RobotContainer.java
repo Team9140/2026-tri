@@ -4,6 +4,7 @@
 
 package org.team9140.frc2026;
 
+import org.team9140.frc2026.commands.AutonomousRoutines;
 import org.team9140.frc2026.generated.TunerConstants;
 import org.team9140.frc2026.subsystems.drive.CommandSwerveDrivetrain;
 import org.team9140.frc2026.subsystems.drive.SwerveDriveIO;
@@ -57,6 +58,7 @@ public class RobotContainer {
   private final Spinner spinner;
   private final Feeder feeder;
   private final CommandSwerveDrivetrain drivetrain;
+  private final AutonomousRoutines autos;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -90,7 +92,6 @@ public class RobotContainer {
         spinner = new Spinner(new SpinnerIO() {});
         feeder = new Feeder(new FeederIO() {});
       }
-
     }
 
     // Set up subsystems
@@ -98,6 +99,7 @@ public class RobotContainer {
     turret.setRobotDataSuppliers(drivetrain::getDrivetrainPose, drivetrain::getDrivetrainSpeeds);
     shooter.setRobotDataSuppliers(drivetrain::getDrivetrainPose, drivetrain::getDrivetrainSpeeds);
     hood.setRobotDataSuppliers(drivetrain::getDrivetrainPose, drivetrain::getDrivetrainSpeeds);
+    autos = new AutonomousRoutines(drivetrain, turret, shooter, hood, feeder, spinner, extender, roller);
     configureBindings(); // Configure the trigger bindings
   }
 
@@ -152,6 +154,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return autos.getAutonomousCommand();
   }
 }
