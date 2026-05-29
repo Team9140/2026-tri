@@ -23,4 +23,6 @@ public interface SwerveDriveIO {
             Pose2d visionRobotPoseMeters,
             double fpgaTimestampSeconds,
             Matrix<N3, N1> visionMeasurementStdDevs) {}
+    
+    default void resetPose(Pose2d pose) {};
 } 

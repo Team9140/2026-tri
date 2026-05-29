@@ -48,4 +48,9 @@ public class SwerveDriveIOReal extends TunerSwerveDrivetrain implements SwerveDr
             Utils.fpgaToCurrentTime(fpgaTimestampSeconds), 
             visionMeasurementStdDevs);
     }
+
+    @Override
+    public void resetPose(Pose2d pose) {
+        super.resetPose(pose);
+    }
 }

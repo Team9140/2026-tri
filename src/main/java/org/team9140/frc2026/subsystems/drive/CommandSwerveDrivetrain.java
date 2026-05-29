@@ -206,6 +206,10 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
         return inputs.Speeds;
     }
 
+    public void resetPose(Pose2d pose) {
+        drivetrain.resetPose(pose);
+    }
+
     private double startTime = 0.0;
 
     private DoubleSupplier leftStickX, leftStickY, rightStickX;
