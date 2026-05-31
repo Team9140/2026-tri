@@ -19,13 +19,11 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 
 import choreo.trajectory.SwerveSample;
-import choreo.trajectory.Trajectory;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -263,7 +261,7 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
      *
      * @param sample Provides sample to execute.
      */
-    private void followSample(SwerveSample sample) {
+    public void followSample(SwerveSample sample) {
         Pose2d currPose = inputs.Pose;
         Pose2d target = sample.getPose();
 
@@ -282,30 +280,4 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
                 .withVelocityX(vx)
                 .withVelocityY(vy));
     }
-
-    private Timer trajectoryTimer = new Timer();
-    // This whole thing would probably be much better with V3 commands tbh
-    public Command followTrajectory(Trajectory<SwerveSample> trajectory) {
-        return this.runOnce(() -> {
-            trajectoryTimer.restart();
-        }).andThen(this.run(() -> { // follows each sample until trajectory time should have ended
-            Optional<SwerveSample> sample = trajectory.sampleAt(trajectoryTimer.get(), false);
-            sample.ifPresent(this::followSample);
-        }).until(() -> trajectoryTimer.hasElapsed(trajectory.getTotalTime())))
-        .andThen(this.run(() -> { // follows the last sample until it actually reaches the final spot
-            Optional<SwerveSample> finalSample = trajectory.getFinalSample(false);
-            finalSample.ifPresent(this::followSample); 
-        }).until(reachedAutonPose)
-        .andThen(this.stop()) // this zeroes out any small velocity that may be left
-        .onlyIf(() -> { // makes it only try to follow the last sample if trajectory ends with a stop point
-                        // this is so chaining trajectories works correctly
-            Optional<SwerveSample> finalSample = trajectory.getFinalSample(false);
-            if (finalSample.isPresent()){
-                SwerveSample sample = finalSample.get();
-                return sample.vx == 0 && sample.vy == 0 && sample.omega == 0;
-            }
-            else return false;
-        }));
-    }
-
 }

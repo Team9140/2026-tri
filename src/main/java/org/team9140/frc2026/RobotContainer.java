@@ -176,9 +176,11 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+  /*  This is now not needed as the choreo auto factory just has us bind the auto command to RobotModeTriggers.autonomous()
   public Command getAutonomousCommand() {
-    return autos.getAutonomousCommand();
+    return null;
   }
+    */
 
   public void updateViz() {
 
