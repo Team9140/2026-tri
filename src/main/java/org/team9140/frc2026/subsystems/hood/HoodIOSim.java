@@ -23,7 +23,7 @@ public class HoodIOSim extends HoodIOReal{
         hoodMotorSim = new SingleJointedArmSim(
             motor,
             Hood.GEAR_RATIO,
-            1,
+            0.022,
             0.2,
             0,
             Math.PI / 2.0,
@@ -51,7 +51,7 @@ public class HoodIOSim extends HoodIOReal{
         double hoodMotorVolts = hoodMotor.getSimState().getMotorVoltage();
         // The kP is really high so the only way I could get it to stop occilating was to do this
         // Changing the arm sim constants wouldn't get it to stop
-        hoodMotorSim.setInputVoltage(addFriction(Util.clamp(hoodMotorVolts, 0.27), 0.07));
+        hoodMotorSim.setInputVoltage(addFriction(Util.clamp(hoodMotorVolts, 0.5), 0.07));
         hoodMotorSim.update(dt);
 
         hoodMotor.getSimState().setRawRotorPosition(

@@ -9,6 +9,7 @@ import org.team9140.frc2026.generated.TunerConstants;
 import com.ctre.phoenix6.CANBus;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
@@ -36,7 +37,7 @@ public final class Constants {
     REPLAY
   }
 
-  public static final double SIM_LOOP_PERIOD = 0.004; // In seconds
+  public static final double SIM_LOOP_PERIOD = 0.001; // In seconds
 
   public static class Ports {
         public static final CANBus ROBO_RIO = CANBus.roboRIO();
@@ -122,6 +123,7 @@ public final class Constants {
 
         public static final double OVERTURN_LOOKAHEAD_TIME = 1.5;
         public static final Transform2d POSITION_TO_ROBOT = new Transform2d(-0.124, -0.159, new Rotation2d(-Math.PI));
+        public static final Transform3d TURRET_AXIS_TO_FLYWHEEL_AXIS = new Transform3d(-0.113, 0, 0.067, new Rotation3d());
 
         public static final double TURN_SHOOTER_OFF_TIME = 1.0;
         public static final double CANCODER_OFFSET_ROTS = 0.246;

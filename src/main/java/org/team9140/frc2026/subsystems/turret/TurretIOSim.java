@@ -22,7 +22,7 @@ public class TurretIOSim extends TurretIOReal{
         turretMotorSim = new SingleJointedArmSim(
                 motor,
                 60,
-                1,
+                0.094,
                 0.2,
                 -200 * Math.PI / 180.0,
                 200 * Math.PI / 180.0,

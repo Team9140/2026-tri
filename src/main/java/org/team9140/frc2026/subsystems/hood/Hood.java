@@ -82,4 +82,8 @@ public class Hood extends SubsystemBase{
     public Command aim() {
         return aim(() -> LookUpAimAlign.getZone(robotPoseSupplier.get()).getTranslation());
     }
+
+    public double getPosition() {
+        return inputs.hoodAngleRotations;
+    }
 }
