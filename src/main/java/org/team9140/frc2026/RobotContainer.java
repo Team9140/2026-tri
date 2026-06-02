@@ -42,7 +42,6 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -186,23 +185,22 @@ public class RobotContainer {
 
   public void updateViz() {
 
-    Pose3d intakePose = new Pose3d();
+    Pose3d intakePose = new Pose3d(
+        extender.getPosition() * Math.cos(Units.degreesToRadians(-6.689)),
+        0,
+        extender.getPosition() * Math.sin(Units.degreesToRadians(-6.689)),
+        new Rotation3d());
 
     Pose3d turretPose = new Pose3d(Constants.Turret.POSITION_TO_ROBOT.getX(), Constants.Turret.POSITION_TO_ROBOT.getY(),
         0.345,
         new Rotation3d(0, 0, Units.rotationsToRadians(turret.getPosition())));
 
-    Pose3d hoodPose = new Pose3d(0, 0, 0,
-        new Rotation3d(0, -Units.rotationsToRadians(hood.getPosition()) - Units.degreesToRadians(18),
-            Units.rotationsToRadians(turret.getPosition())));
-
-    Pose3d hoodPose2 = turretPose.transformBy(new Transform3d(Constants.Turret.TURRET_AXIS_TO_FLYWHEEL_AXIS.getX(), 0,
-        Constants.Turret.TURRET_AXIS_TO_FLYWHEEL_AXIS.getZ(),
+    Pose3d hoodPose = turretPose.transformBy(new Transform3d(Constants.Turret.TURRET_AXIS_TO_FLYWHEEL_AXIS,
         new Rotation3d(0, -Units.rotationsToRadians(hood.getPosition()) - Units.degreesToRadians(18), 0)));
 
     Logger.recordOutput("ComponentsPoseArray", new Pose3d[] {
         intakePose,
         turretPose,
-        hoodPose2 });
+        hoodPose });
   }
 }

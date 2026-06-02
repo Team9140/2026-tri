@@ -1,5 +1,8 @@
 package org.team9140.frc2026.subsystems.extender;
 
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Volt;
+
 import org.team9140.frc2026.Constants;
 import org.team9140.frc2026.Constants.Extender;
 
@@ -19,10 +22,10 @@ public class ExtenderIOSim extends ExtenderIOReal{
 
 
     public ExtenderIOSim() {
-        motor = DCMotor.getKrakenX60Foc(1);
+        motor = DCMotor.getKrakenX44Foc(1);
         extenderSim = new ElevatorSim(motor,
             Extender.GEAR_RATIO,
-            1,
+            5.7,
             Extender.PINION_CIRCUMFERENCE / Math.PI / 2.0,
             Extender.REVERSE_SOFT_LIMIT_THRESHOLD,
             Extender.ARM_OUT_POSITION,
@@ -46,6 +49,8 @@ public class ExtenderIOSim extends ExtenderIOReal{
 
     private void updateSimState(double dt) {
         double extendVolts = this.extenderMotor.getSimState().getMotorVoltage();
+        extendVolts -= this.extenderSim.getVelocityMetersPerSecond() * 3.5;
+
         this.extenderSim.setInputVoltage(extendVolts);
         this.extenderSim.update(dt);
 

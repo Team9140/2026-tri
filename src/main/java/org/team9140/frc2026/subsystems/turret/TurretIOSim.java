@@ -1,5 +1,8 @@
 package org.team9140.frc2026.subsystems.turret;
 
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Volt;
+
 import org.team9140.frc2026.Constants;
 import org.team9140.frc2026.Constants.Turret;
 
@@ -18,10 +21,10 @@ public class TurretIOSim extends TurretIOReal{
     private double kSimLoopPeriod = Constants.SIM_LOOP_PERIOD;
 
     public TurretIOSim () {
-        motor = DCMotor.getKrakenX60Foc(1);
+        motor = DCMotor.getKrakenX44Foc(1);
         turretMotorSim = new SingleJointedArmSim(
                 motor,
-                60,
+                Turret.GEAR_RATIO,
                 0.094,
                 0.2,
                 -200 * Math.PI / 180.0,
@@ -48,6 +51,9 @@ public class TurretIOSim extends TurretIOReal{
 
     private void updateSimState(double dt) {
         double turretSimVolts = turretMotor.getSimState().getMotorVoltage();
+        // a fudge for friction damping out the oscillation
+        turretSimVolts -= turretMotorSim.getVelocityRadPerSec() * 0.25;
+        
         turretMotorSim.setInputVoltage(turretSimVolts);
         turretMotorSim.update(dt);
          

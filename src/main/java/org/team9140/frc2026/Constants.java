@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -123,7 +124,7 @@ public final class Constants {
 
         public static final double OVERTURN_LOOKAHEAD_TIME = 1.5;
         public static final Transform2d POSITION_TO_ROBOT = new Transform2d(-0.124, -0.159, new Rotation2d(-Math.PI));
-        public static final Transform3d TURRET_AXIS_TO_FLYWHEEL_AXIS = new Transform3d(-0.113, 0, 0.067, new Rotation3d());
+        public static final Translation3d TURRET_AXIS_TO_FLYWHEEL_AXIS = new Translation3d(-0.113, 0, 0.067);
 
         public static final double TURN_SHOOTER_OFF_TIME = 1.0;
         public static final double CANCODER_OFFSET_ROTS = 0.246;

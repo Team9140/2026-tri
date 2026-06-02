@@ -49,9 +49,9 @@ public class HoodIOSim extends HoodIOReal{
 
     private void updateSimState(double dt) {
         double hoodMotorVolts = hoodMotor.getSimState().getMotorVoltage();
-        // The kP is really high so the only way I could get it to stop occilating was to do this
-        // Changing the arm sim constants wouldn't get it to stop
-        hoodMotorSim.setInputVoltage(addFriction(Util.clamp(hoodMotorVolts, 0.5), 0.07));
+        hoodMotorVolts -= hoodMotorSim.getVelocityRadPerSec() * 0.7;
+        
+        hoodMotorSim.setInputVoltage(hoodMotorVolts);
         hoodMotorSim.update(dt);
 
         hoodMotor.getSimState().setRawRotorPosition(
@@ -63,17 +63,5 @@ public class HoodIOSim extends HoodIOReal{
             hoodMotorSim.getAngleRads() / 2.0 / Math.PI * Hood.SENSOR_TO_MECHANISM_RATIO);
         hoodCANcoder.getSimState().setVelocity(
             hoodMotorSim.getVelocityRadPerSec() / 2.0 / Math.PI * Hood.SENSOR_TO_MECHANISM_RATIO);
-    }
-
-    // I saw poofs do this with their turret sim, and it got ours to act more normal
-    private double addFriction(double motorVoltage, double frictionVoltage) {
-        if (Math.abs(motorVoltage) < frictionVoltage) {
-            motorVoltage = 0.0;
-        } else if (motorVoltage > 0.0) {
-            motorVoltage -= frictionVoltage;
-        } else {
-            motorVoltage += frictionVoltage;
-        }
-        return motorVoltage;
     }
 }

@@ -27,7 +27,7 @@ import org.team9140.frc2026.Constants;
 import org.team9140.frc2026.Constants.Ports;
 import org.team9140.lib.Util;
 
-public class ExtenderIOReal implements ExtenderIO{
+public class ExtenderIOReal implements ExtenderIO {
     protected final TalonFX extenderMotor;
     private final MotionMagicTorqueCurrentFOC motionMagic = new MotionMagicTorqueCurrentFOC(0);
     private final MotionMagicConfigs motionMagicConfigs;
@@ -38,7 +38,8 @@ public class ExtenderIOReal implements ExtenderIO{
     private final StatusSignal<Current> torqueCurrent;
     private final StatusSignal<Temperature> tempCelsius;
 
-    // Debounces connection input so random loss of connection from smth for short amount of time isn't logged
+    // Debounces connection input so random loss of connection from smth for short
+    // amount of time isn't logged
     private final Debouncer connectedDebouncer = new Debouncer(0.5, DebounceType.kFalling);
 
     public ExtenderIOReal() {
@@ -68,7 +69,7 @@ public class ExtenderIOReal implements ExtenderIO{
                 .withPeakReverseTorqueCurrent(-Constants.Extender.STATOR_CURRENT_LIMIT)
                 .withTorqueNeutralDeadband(1.0);
 
-         TalonFXConfiguration motorConfigs = new TalonFXConfiguration()
+        TalonFXConfiguration motorConfigs = new TalonFXConfiguration()
                 .withCurrentLimits(currentLimits)
                 .withMotorOutput(motorOutputConfigs)
                 .withMotionMagic(motionMagicConfigs)
@@ -77,7 +78,7 @@ public class ExtenderIOReal implements ExtenderIO{
                 .withFeedback(new FeedbackConfigs()
                         .withSensorToMechanismRatio(Constants.Extender.GEAR_RATIO))
                 .withTorqueCurrent(torqueCurrentConfigs);
-        
+
         Util.tryUntilOk(() -> this.extenderMotor.getConfigurator().apply(motorConfigs));
 
         // fetch main motor's signals
@@ -88,27 +89,26 @@ public class ExtenderIOReal implements ExtenderIO{
         this.tempCelsius = this.extenderMotor.getDeviceTemp(false);
 
         // Set frequency for signals being used
-        Util.tryUntilOk(() -> BaseStatusSignal.setUpdateFrequencyForAll(50.0, 
+        Util.tryUntilOk(() -> BaseStatusSignal.setUpdateFrequencyForAll(50.0,
                 this.motorPosition,
                 this.appliedVoltage,
                 this.supplyCurrent,
                 this.torqueCurrent,
-                this.tempCelsius
-                ));
-        
+                this.tempCelsius));
+
         // Reduces frequency of all unused signals to reduce CANBus utilization
         Util.tryUntilOk(() -> ParentDevice.optimizeBusUtilizationForAll(this.extenderMotor));
     }
 
     @Override
     public void updateInputs(ExtenderIOInputs inputs) {
-        StatusCode extenderMotorStatus =  BaseStatusSignal.refreshAll(
-                                        this.motorPosition,
-                                        this.appliedVoltage,
-                                        this.supplyCurrent,
-                                        this.torqueCurrent,
-                                        this.tempCelsius);
-        
+        StatusCode extenderMotorStatus = BaseStatusSignal.refreshAll(
+                this.motorPosition,
+                this.appliedVoltage,
+                this.supplyCurrent,
+                this.torqueCurrent,
+                this.tempCelsius);
+
         inputs.connected = connectedDebouncer.calculate(extenderMotorStatus.isOK());
         inputs.motorPosition = this.motorPosition.getValueAsDouble();
         inputs.intakePosition = this.motorPosition.getValueAsDouble() * Constants.Extender.PINION_CIRCUMFERENCE;
@@ -122,6 +122,7 @@ public class ExtenderIOReal implements ExtenderIO{
     public void goToPosition(double position, double maxVelocity) {
         this.motionMagicConfigs.withMotionMagicCruiseVelocity(maxVelocity);
         this.extenderMotor.getConfigurator().apply(this.motionMagicConfigs);
-        this.extenderMotor.setControl(this.motionMagic.withPosition(position / Constants.Extender.PINION_CIRCUMFERENCE));
+        this.extenderMotor
+                .setControl(this.motionMagic.withPosition(position / Constants.Extender.PINION_CIRCUMFERENCE));
     }
 }
