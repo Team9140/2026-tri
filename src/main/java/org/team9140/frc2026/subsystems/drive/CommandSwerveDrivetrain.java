@@ -212,23 +212,15 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
 
     private double startTime = 0.0;
 
-    private DoubleSupplier leftStickX, leftStickY, rightStickX;
-
-    public void setJoystickInput(DoubleSupplier leftStickX, DoubleSupplier leftStickY, DoubleSupplier rightStickX) {
-        this.leftStickX = leftStickX;
-        this.leftStickY = leftStickY;
-        this.rightStickX = rightStickX;
-    }
-
-    private Command drive(double teleopVelocityMultiplier) {
+    private Command drive(DoubleSupplier leftStickX, DoubleSupplier leftStickY, DoubleSupplier rightStickX, double teleopVelocityMultiplier) {
         return this.runOnce(() -> {
             startTime = Utils.getSystemTimeSeconds();
         }).andThen(this.run(() -> {
             double vX = teleopVelocityMultiplier * Drive.MAX_TELEOP_VELOCITY
-                    * MathUtil.applyDeadband(-this.leftStickY.getAsDouble(), Drive.CONTROLLER_DEADBAND);
+                    * MathUtil.applyDeadband(-leftStickY.getAsDouble(), Drive.CONTROLLER_DEADBAND);
             double vY = teleopVelocityMultiplier * Drive.MAX_TELEOP_VELOCITY
-                    * MathUtil.applyDeadband(-this.leftStickX.getAsDouble(), Drive.CONTROLLER_DEADBAND);
-            double omega = Drive.MAX_TELEOP_ROTATION * MathUtil.applyDeadband(-this.rightStickX.getAsDouble(), Drive.CONTROLLER_DEADBAND);
+                    * MathUtil.applyDeadband(-leftStickX.getAsDouble(), Drive.CONTROLLER_DEADBAND);
+            double omega = Drive.MAX_TELEOP_ROTATION * MathUtil.applyDeadband(-rightStickX.getAsDouble(), Drive.CONTROLLER_DEADBAND);
 
             if (vX == 0.0 && vY == 0.0 && omega == 0) {
                 if (Utils.getSystemTimeSeconds() - startTime >= Drive.BRAKE_IDLE_TIME) {
@@ -250,12 +242,12 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
         })).withName("regular drive");
     }
 
-    public Command teleopDrive() {
-        return drive(1);
+    public Command teleopDrive(DoubleSupplier leftStickX, DoubleSupplier leftStickY, DoubleSupplier rightStickX) {
+        return drive(leftStickX, leftStickY, rightStickX, 1);
     }
 
-    public Command shootingTeleopDrive() {
-        return drive(Drive.TELEOP_SHOOTING_VELOCITY_MULTIPLIER);
+    public Command shootingDrive(DoubleSupplier leftStickX, DoubleSupplier leftStickY, DoubleSupplier rightStickX) {
+        return drive(leftStickX, leftStickY, rightStickX, Drive.TELEOP_SHOOTING_VELOCITY_MULTIPLIER);
     }
 
     public Command stop() {

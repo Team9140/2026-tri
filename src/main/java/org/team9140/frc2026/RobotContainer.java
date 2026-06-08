@@ -111,7 +111,6 @@ public class RobotContainer {
     }
 
     // Set up subsystems
-    drivetrain.setJoystickInput(controller::getLeftX, controller::getLeftY, controller::getRightX);
     turret.setRobotDataSuppliers(drivetrain::getDrivetrainPose, drivetrain::getDrivetrainSpeeds);
     shooter.setRobotDataSuppliers(drivetrain::getDrivetrainPose, drivetrain::getDrivetrainSpeeds);
     hood.setRobotDataSuppliers(drivetrain::getDrivetrainPose, drivetrain::getDrivetrainSpeeds);
@@ -137,7 +136,8 @@ public class RobotContainer {
   private final CommandXboxController controller = new CommandXboxController(0);
 
   private void configureBindings() {
-    drivetrain.setDefaultCommand(drivetrain.teleopDrive());
+    Command normalDriveCommand = drivetrain.teleopDrive(controller::getLeftX, controller::getLeftY, controller::getRightX);
+    drivetrain.setDefaultCommand(normalDriveCommand);
 
     Trigger readyToShoot = hood.atPosition.and(shooter.atVelocity).and(turret.atPosition); // Should we ever debounce
                                                                                            // this?
