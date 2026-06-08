@@ -16,7 +16,6 @@ import org.team9140.frc2026.subsystems.extender.ExtenderIOSim;
 import org.team9140.frc2026.subsystems.feeder.Feeder;
 import org.team9140.frc2026.subsystems.feeder.FeederIO;
 import org.team9140.frc2026.subsystems.feeder.FeederIOReal;
-import org.team9140.frc2026.subsystems.feeder.FeederIOSim;
 import org.team9140.frc2026.subsystems.hood.Hood;
 import org.team9140.frc2026.subsystems.hood.HoodIO;
 import org.team9140.frc2026.subsystems.hood.HoodIOReal;
@@ -24,7 +23,6 @@ import org.team9140.frc2026.subsystems.hood.HoodIOSim;
 import org.team9140.frc2026.subsystems.roller.Roller;
 import org.team9140.frc2026.subsystems.roller.RollerIO;
 import org.team9140.frc2026.subsystems.roller.RollerIOReal;
-import org.team9140.frc2026.subsystems.roller.RollerIOSim;
 import org.team9140.frc2026.subsystems.shooter.Shooter;
 import org.team9140.frc2026.subsystems.shooter.ShooterIO;
 import org.team9140.frc2026.subsystems.shooter.ShooterIOReal;
@@ -32,7 +30,6 @@ import org.team9140.frc2026.subsystems.shooter.ShooterIOSim;
 import org.team9140.frc2026.subsystems.spinner.Spinner;
 import org.team9140.frc2026.subsystems.spinner.SpinnerIO;
 import org.team9140.frc2026.subsystems.spinner.SpinnerIOReal;
-import org.team9140.frc2026.subsystems.spinner.SpinnerIOSim;
 import org.team9140.frc2026.subsystems.turret.Turret;
 import org.team9140.frc2026.subsystems.turret.TurretIO;
 import org.team9140.frc2026.subsystems.turret.TurretIOReal;
@@ -85,13 +82,13 @@ public class RobotContainer {
       }
       case SIM -> {
         drivetrain = new CommandSwerveDrivetrain(TunerConstants.createSimDrivetrain());
-        roller = new Roller(new RollerIOSim());
+        roller = new Roller(new RollerIOReal());
         extender = new Extender(new ExtenderIOSim());
         turret = new Turret(new TurretIOSim());
         hood = new Hood(new HoodIOSim());
         shooter = new Shooter(new ShooterIOSim());
-        spinner = new Spinner(new SpinnerIOSim());
-        feeder = new Feeder(new FeederIOSim());
+        spinner = new Spinner(new SpinnerIOReal());
+        feeder = new Feeder(new FeederIOReal());
       }
       default -> { // This is replay but we need a default case for it to work
         drivetrain = new CommandSwerveDrivetrain(new SwerveDriveIO() {
