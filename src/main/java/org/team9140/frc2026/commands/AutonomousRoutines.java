@@ -56,16 +56,6 @@ public class AutonomousRoutines {
         this.extender = extender;
         this.roller = roller;
 
-        Command resetAllSubsystems = Commands.parallel(
-            this.drivetrain.stop(),
-            this.turret.off(),
-            this.shooter.off(),
-            this.hood.off(),
-            this.feeder.reverseAndOff(),
-            this.spinner.off(),
-            this.roller.off()
-        );
-
         this.readyToShoot = turret.atPosition.and(hood.atPosition).and(shooter.atVelocity);
 
         this.autoFactory = new AutoFactory(this.drivetrain::getDrivetrainPose,
@@ -83,74 +73,122 @@ public class AutonomousRoutines {
         this.autoChooser = new AutoChooser("Do Nothing");
 
         autoChooser.addCmd("Shoot Preload", this::shootPreload);
-        autoChooser.addRoutine("One Pass Over Bump From Left", this::onePassBumpDepot);
+        autoChooser.addRoutine("One Depot Pass Then Neutral", () -> onePass(true));
+        autoChooser.addRoutine("One Outpost Pass Then Neutral", () -> onePass(false));
+        autoChooser.addRoutine("Score Depot Then Neutral", this::scoreDepot);
 
         SmartDashboard.putData("Auto Chooser", this.autoChooser);;
         RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
+
         // Reset everything at the end of auto so no commands outlive auto
-        // Default commands would probably get rid of the need for this
+        Command resetAllSubsystems = Commands.parallel(
+            this.drivetrain.stop(),
+            this.turret.off(),
+            this.shooter.off(),
+            this.hood.off(),
+            this.feeder.off(),
+            this.spinner.off(),
+            this.roller.off()
+        );
         RobotModeTriggers.autonomous().onFalse(resetAllSubsystems);
     }
 
     @AutoLogOutput
     private Pose2d initialAutoPose = null;
 
-    private void setInitialAutoPose(Pose2d pose) {
-        initialAutoPose = pose;
+    private Command aim() {
+        return Commands.parallel(turret.aim(), shooter.aim(), hood.aim());
+    }
+
+    private Command shoot() {
+        return Commands.parallel(spinner.feed(), feeder.feed());
+    }
+
+    private Command aimOff() {
+        return Commands.parallel(turret.off(), shooter.off(), hood.off());
+    }
+
+    private Command shootOff() {
+        return Commands.parallel(spinner.off(), feeder.reverseAndOff());
+    }
+
+    private Command aimAndShootOff() {
+        return Commands.parallel(aimOff(), shootOff());
+    }
+
+    private Command waitTillAimed() {
+        return Commands.waitUntil(readyToShoot);
+    }
+
+    //Shoots forever after aiming
+    private Command aimThenShootWhenReady() {
+        return Commands.parallel(aim(), Commands.sequence(waitTillAimed(), shoot()));
     }
 
     private Command shootPreload() {
-        Command aimThenShootWhenReady = Commands.parallel(
-            Commands.parallel(turret.aim(), shooter.aim(), hood.aim()), // aim everything
-            Commands.sequence(
-                Commands.waitUntil(readyToShoot),
-                Commands.parallel(spinner.feed(), feeder.feed()))); // shoot
-        Command stopAimingAndShooting = Commands.parallel(
-            turret.off(),
-            shooter.off(),
-            hood.off(),
-            spinner.off(),
-            feeder.reverseAndOff()
-        );
         return Commands.sequence(
-            aimThenShootWhenReady.withTimeout(15),
-            stopAimingAndShooting,
+            aimThenShootWhenReady().withTimeout(15),
+            aimAndShootOff(),
             this.extender.armOut()
         );
     }
-    
-    private AutoRoutine onePassBumpDepot() {
-        Command aimThenShootWhenReady = Commands.parallel(
-            Commands.parallel(turret.aim(), shooter.aim(), hood.aim()), // aim everything
-            Commands.sequence(
-                Commands.waitUntil(readyToShoot),
-                Commands.parallel(spinner.feed(), feeder.feed()))); // shoot
-        Command stopAimingAndShooting = Commands.parallel(
-            turret.off(),
-            shooter.off(),
-            hood.off(),
-            spinner.off(),
-            feeder.reverseAndOff()
-        );
-        
-        AutoRoutine routine = autoFactory.newRoutine("testRoutine");
-        
-        AutoTrajectory traj = routine.trajectory("Bump_Depot_Deep");
+
+    private AutoRoutine onePass(boolean onDepotSide) {
+        AutoRoutine routine = this.autoFactory.newRoutine("One Pass Then Neutral");
+
+        AutoTrajectory intakingTraj = routine.trajectory("depotNeutralPass");
+        AutoTrajectory toNeutralTraj = routine.trajectory("depotShootingToNeutral");
+
+        // flip traj if starting on other side
+        if (!onDepotSide) {
+            intakingTraj = intakingTraj.mirrorY();
+            toNeutralTraj = toNeutralTraj.mirrorY();
+        }
+        // logs starting pose so it's visible on elastic and stuff
+        this.initialAutoPose = intakingTraj.getInitialPose().get();
+
+        // get fuel
         routine.active().onTrue(
             Commands.sequence(
-                extender.armOut(),
-                roller.intake(),
-                traj.cmd()
-            )
-        );
+                extender.armOut(), // No need for proxies bc these don't need to be
+                roller.intake(),   // commanded during the traj
+                intakingTraj.cmd())); 
+        // There's a spawnCmd method which makes a command to schedule a separate traj command
+        // That might solve requirements bleeding into the traj
 
-        traj.done().onTrue(
+        // shoot fuel
+        intakingTraj.done().onTrue(
             Commands.sequence(
-                aimThenShootWhenReady.withTimeout(5),
-                stopAimingAndShooting
-        ));
+                drivetrain.stop(), // zeroes out any leftover velocity
+                aimThenShootWhenReady().withTimeout(10),
+                aimAndShootOff(),
+                toNeutralTraj.cmd()));
+        
+        toNeutralTraj.done().onTrue(roller.off()); // avoid running roller for no reason
 
-        traj.getInitialPose().ifPresent(this::setInitialAutoPose);
+        return routine;
+    }
+
+    private AutoRoutine scoreDepot() {
+        AutoRoutine routine = this.autoFactory.newRoutine("Score Depot Then Neutral");
+
+        AutoTrajectory intakingTraj = routine.trajectory("getDepot");
+        AutoTrajectory toNeutralTraj = routine.trajectory("depotCornerToNeutral");
+
+        this.initialAutoPose = intakingTraj.getInitialPose().get();
+
+        routine.active().onTrue(Commands.sequence(
+                extender.armOutForDepot(), // No need for proxies bc these don't need to be
+                roller.intake(),           // commanded during the traj
+                intakingTraj.cmd()));
+        
+        intakingTraj.done().onTrue(Commands.sequence(
+                drivetrain.stop(), // zeroes out any leftover velocity
+                aimThenShootWhenReady().withTimeout(10),
+                aimAndShootOff(),
+                toNeutralTraj.cmd()));
+        
+        toNeutralTraj.done().onTrue(roller.off()); // avoid running roller for no reason
 
         return routine;
     }
