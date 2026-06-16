@@ -36,6 +36,7 @@ import org.team9140.frc2026.subsystems.turret.TurretIOReal;
 import org.team9140.frc2026.subsystems.turret.TurretIOSim;
 import org.team9140.frc2026.subsystems.vision.Vision;
 import org.team9140.frc2026.subsystems.vision.VisionConstants;
+import org.team9140.frc2026.subsystems.vision.VisionIO;
 import org.team9140.frc2026.subsystems.vision.VisionIOLimelight;
 import org.team9140.frc2026.subsystems.vision.VisionIOPhotonVisionSim;
 
@@ -94,7 +95,8 @@ public class RobotContainer {
         vision = new Vision(
             drivetrain::addVisionMeasurement,
             new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, drivetrain::getDrivetrainPose),
-            new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, drivetrain::getDrivetrainPose));
+            new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, drivetrain::getDrivetrainPose),
+            new VisionIOPhotonVisionSim(VisionConstants.camera2Name, VisionConstants.robotToCamera2, drivetrain::getDrivetrainPose));
         roller = new Roller(new RollerIOReal());
         extender = new Extender(new ExtenderIOSim());
         turret = new Turret(new TurretIOSim());
@@ -106,7 +108,7 @@ public class RobotContainer {
       default -> { // This is replay but we need a default case for it to work
         drivetrain = new CommandSwerveDrivetrain(new SwerveDriveIO() {
         });
-        vision = new Vision(null);
+        vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO[3]);
         roller = new Roller(new RollerIO() {
         });
         extender = new Extender(new ExtenderIO() {
