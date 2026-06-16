@@ -34,6 +34,10 @@ import org.team9140.frc2026.subsystems.turret.Turret;
 import org.team9140.frc2026.subsystems.turret.TurretIO;
 import org.team9140.frc2026.subsystems.turret.TurretIOReal;
 import org.team9140.frc2026.subsystems.turret.TurretIOSim;
+import org.team9140.frc2026.subsystems.vision.Vision;
+import org.team9140.frc2026.subsystems.vision.VisionConstants;
+import org.team9140.frc2026.subsystems.vision.VisionIOLimelight;
+import org.team9140.frc2026.subsystems.vision.VisionIOPhotonVisionSim;
 
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -62,6 +66,7 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Spinner spinner;
   private final Feeder feeder;
+  private final Vision vision;
   private final CommandSwerveDrivetrain drivetrain;
   private final AutonomousRoutines autos;
 
@@ -72,6 +77,10 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case REAL -> {
         drivetrain = new CommandSwerveDrivetrain(TunerConstants.createRealDrivetrain());
+        vision = new Vision(drivetrain::addVisionMeasurement, 
+            new VisionIOLimelight(VisionConstants.camera0Name, drivetrain::getRotation),
+            new VisionIOLimelight(VisionConstants.camera1Name, drivetrain::getRotation),
+            new VisionIOLimelight(VisionConstants.camera2Name, drivetrain::getRotation));
         roller = new Roller(new RollerIOReal());
         extender = new Extender(new ExtenderIOReal());
         turret = new Turret(new TurretIOReal());
@@ -82,6 +91,10 @@ public class RobotContainer {
       }
       case SIM -> {
         drivetrain = new CommandSwerveDrivetrain(TunerConstants.createSimDrivetrain());
+        vision = new Vision(
+            drivetrain::addVisionMeasurement,
+            new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, drivetrain::getDrivetrainPose),
+            new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, drivetrain::getDrivetrainPose));
         roller = new Roller(new RollerIOReal());
         extender = new Extender(new ExtenderIOSim());
         turret = new Turret(new TurretIOSim());
@@ -93,6 +106,7 @@ public class RobotContainer {
       default -> { // This is replay but we need a default case for it to work
         drivetrain = new CommandSwerveDrivetrain(new SwerveDriveIO() {
         });
+        vision = new Vision(null);
         roller = new Roller(new RollerIO() {
         });
         extender = new Extender(new ExtenderIO() {

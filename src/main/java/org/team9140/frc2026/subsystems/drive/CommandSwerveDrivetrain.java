@@ -20,9 +20,13 @@ import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 
 import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -200,6 +204,10 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
         return inputs.Pose;
     }
 
+    public Rotation2d getRotation() {
+        return getDrivetrainPose().getRotation();
+    }
+
     public ChassisSpeeds getDrivetrainSpeeds() {
         return inputs.Speeds;
     }
@@ -279,5 +287,10 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
                 .withRotationalRate(omega)
                 .withVelocityX(vx)
                 .withVelocityY(vy));
+    }
+
+    public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double fpgaTimestampSeconds,
+            Matrix<N3, N1> visionMeasurementStdDevs) {
+        drivetrain.addVisionMeasurement(visionRobotPoseMeters, fpgaTimestampSeconds, visionMeasurementStdDevs);
     }
 }
