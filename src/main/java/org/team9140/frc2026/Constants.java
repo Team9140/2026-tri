@@ -9,7 +9,6 @@ import org.team9140.frc2026.generated.TunerConstants;
 import com.ctre.phoenix6.CANBus;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -55,6 +54,7 @@ public final class Constants {
         public static final int HOPPER_FEEDER_MOTOR = 13;
         public static final int TURRET_CANCODER = 36;
         public static final int HOOD_CANCODER = 5;
+        public static final int CANRANGE = 40;
     }
 
     public static class Drive {
@@ -217,5 +217,9 @@ public final class Constants {
         public static final double RIGHT_CAMERA_YAW = -90;
         public static final double RIGHT_CAMERA_PITCH = 0.0;
         public static final double RIGHT_CAMERA_ROLL = 0.0;
+    }
+
+    public static class Canrange {
+        public static final double CANRANGE_FULL_THRESHOLD = 5.0;
     }
 }
