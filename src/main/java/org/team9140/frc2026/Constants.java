@@ -97,7 +97,7 @@ public final class Constants {
         public static final double KI = 0;
         public static final double KD = 0;
 
-        public static final double GEAR_RATIO = 26.0 / 24.0;
+        public static final double GEAR_RATIO = 24.0 / 24.0;
 
         public static final double AUTO_IDLE_TIMESTAMP = 2;
     }
