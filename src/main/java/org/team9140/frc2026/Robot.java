@@ -10,7 +10,6 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-import org.team9140.frc2026.Constants.Turret;
 import org.team9140.lib.Util;
 
 import com.ctre.phoenix6.SignalLogger;

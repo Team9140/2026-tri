@@ -2,7 +2,6 @@ package org.team9140.frc2026.subsystems.hood;
 
 import org.team9140.frc2026.Constants;
 import org.team9140.frc2026.Constants.Hood;
-import org.team9140.lib.Util;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.sim.ChassisReference;

@@ -1,8 +1,5 @@
 package org.team9140.frc2026.subsystems.turret;
 
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.Volt;
-
 import org.team9140.frc2026.Constants;
 import org.team9140.frc2026.Constants.Turret;
 
