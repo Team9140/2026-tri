@@ -193,6 +193,8 @@ public class RobotContainer {
     wantShoot.negate().and(wantIntake.negate())
         .onTrue(extender.armOut().andThen(roller.off()));
 
+    controller.leftBumper().onTrue(extender.armIn());
+
     // I don't think there's replacement for entering numbers yet so still using
     // smart dashboard
     SmartDashboard.putNumber("tuning RPM", 2500);
