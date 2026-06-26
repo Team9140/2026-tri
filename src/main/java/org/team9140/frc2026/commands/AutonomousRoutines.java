@@ -163,7 +163,7 @@ public class AutonomousRoutines {
                 drivetrain.stop(), // zeroes out any leftover velocity
                 Commands.parallel(
                     new WaitCommand(7).andThen(extender.armIn()), // does the squeeze, maybe use canrange in future
-                    aimThenShootWhenReady().withTimeout(10)),
+                    aimThenShootWhenReady().withTimeout(13)),
                 aimAndShootOff(),
                 toNeutralTraj.cmd()));
         
