@@ -39,8 +39,12 @@ public class LookUpAimAlign {
                                                                          // seconds
 
     static {
-        airtimeFromDistanceShooting.put(2.5, 0.1);
-        airtimeFromDistanceShooting.put(2.7, 0.1);
+        airtimeFromDistanceShooting.put(2.5, 1.0);
+        airtimeFromDistanceShooting.put(2.7, 1.1);
+        airtimeFromDistanceShooting.put(3.3, 1.1);
+        airtimeFromDistanceShooting.put(4.0, 1.15);
+        airtimeFromDistanceShooting.put(4.85, 1.2);
+        airtimeFromDistanceShooting.put(6.0, 1.5);
         airtimeFromDistancePassing = airtimeFromDistanceShooting;
 
         double BUMPER_TO_TURRET_FT = 1.0;
