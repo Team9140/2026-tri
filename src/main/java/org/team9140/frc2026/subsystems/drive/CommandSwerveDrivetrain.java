@@ -28,6 +28,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -47,6 +49,7 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
 
     @AutoLogOutput
     private Pose2d autonTargetPose = new Pose2d();
+    private Field2d robotField2d = new Field2d();
     @AutoLogOutput
     public final Trigger reachedAutonPose;
     @AutoLogOutput
@@ -171,6 +174,8 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
     public void periodic() {
         drivetrain.updateInputs(inputs);
         Logger.processInputs("Drivetrain", inputs);
+        robotField2d.setRobotPose(inputs.Pose);
+        SmartDashboard.putData(robotField2d);
 
         driveAutonXerror = autonTargetPose.getX() - inputs.Pose.getX();
         driveAutonYerror = autonTargetPose.getY() - inputs.Pose.getY();

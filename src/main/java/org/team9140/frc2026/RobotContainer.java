@@ -4,6 +4,7 @@
 
 package org.team9140.frc2026;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.team9140.frc2026.commands.AutonomousRoutines;
 import org.team9140.frc2026.generated.TunerConstants;
@@ -155,12 +156,16 @@ public class RobotContainer {
 
   private final CommandXboxController controller = new CommandXboxController(0);
 
+  @AutoLogOutput
+  private Trigger readyToShoot;
+
   private void configureBindings() {
     Command normalDriveCommand = drivetrain.teleopDrive(controller::getLeftX, controller::getLeftY,
         controller::getRightX);
     drivetrain.setDefaultCommand(normalDriveCommand);
 
-    Trigger readyToShoot = hood.atPosition.and(shooter.atVelocity).and(turret.atPosition);
+    readyToShoot = hood.atPosition.and(shooter.atVelocity).and(turret.atPosition);
+
     Trigger wantAim = this.controller.rightTrigger(0.3).debounce(Constants.Turret.TURN_SHOOTER_OFF_TIME,
         DebounceType.kFalling);
     Trigger wantShoot = this.controller.rightTrigger(0.9);
