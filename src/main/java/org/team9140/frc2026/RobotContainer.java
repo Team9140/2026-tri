@@ -175,11 +175,10 @@ public class RobotContainer {
     wantShoot.and(readyToShoot).onTrue(shootOnCommand).onFalse(shootOffCommand);
 
     Trigger wantIntake = this.controller.rightBumper();
-    Trigger wantSqueeze = this.controller.leftBumper();
 
-    wantIntake.and(wantSqueeze.negate()).onTrue(extender.armOut().alongWith(roller.intake()))
+    wantIntake.onTrue(extender.armOut().alongWith(roller.intake()))
         .onFalse(roller.off());
-    wantSqueeze.onTrue(extender.armIn().alongWith(roller.intake()))
+    wantShoot.and(wantIntake.negate()).whileTrue(extender.jiggle().alongWith(roller.intake()))
         .onFalse(roller.off());
 
     // I don't think there's replacement for entering numbers yet so still using

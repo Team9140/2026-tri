@@ -1,8 +1,9 @@
 package org.team9140.frc2026.subsystems.extender;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -63,11 +64,20 @@ public class Extender extends SubsystemBase{
         });
     }
 
-    public Command armInOutLoop() {
-        return armIn()
-            .andThen(new WaitCommand(1))
+    private Command armInForJiggle() {
+        return this.runOnce(() -> {
+            targetPosition = Constants.Extender.ARM_OUT_POSITION - Units.inchesToMeters(2);
+            extender.goToPosition(
+                targetPosition, 
+                Constants.Extender.ARM_IN_VELOCITY);
+        });
+    }
+
+    public Command jiggle() {
+        return armInForJiggle()
+            .andThen(new WaitUntilCommand(atPosition))
             .andThen(armOut())
-            .andThen(new WaitCommand(1))
+            .andThen(new WaitUntilCommand(atPosition))
             .repeatedly();
     }
 }
