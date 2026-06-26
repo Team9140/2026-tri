@@ -74,6 +74,7 @@ public class Vision extends SubsystemBase {
     List<Pose3d> allRobotPoses = new LinkedList<>();
     List<Pose3d> allRobotPosesAccepted = new LinkedList<>();
     List<Pose3d> allRobotPosesRejected = new LinkedList<>();
+    List<Pose3d> allRobotPosesMT2 = new LinkedList<>();
 
     // Collect all accepted observations across every camera before sending any
     // to the pose estimator. This way addVisionMeasurement() (which has to rewind
@@ -90,6 +91,7 @@ public class Vision extends SubsystemBase {
       List<Pose3d> robotPoses = new LinkedList<>();
       List<Pose3d> robotPosesAccepted = new LinkedList<>();
       List<Pose3d> robotPosesRejected = new LinkedList<>();
+      List<Pose3d> robotPosesMT2 = new LinkedList<>();
 
       // Add tag poses
       for (int tagId : inputs[cameraIndex].tagIds) {
@@ -119,12 +121,14 @@ public class Vision extends SubsystemBase {
         robotPoses.add(observation.pose());
         if (rejectPose) {
           robotPosesRejected.add(observation.pose());
+        } else if (observation.type() == PoseObservationType.MEGATAG_2) {
+          robotPosesMT2.add(observation.pose());
         } else {
           robotPosesAccepted.add(observation.pose());
         }
 
-        // Skip if rejected
-        if (rejectPose) {
+        // Skip if rejected, not doing MT2 right now
+        if (rejectPose || observation.type() == PoseObservationType.MEGATAG_2) {
           continue;
         }
 
@@ -161,10 +165,15 @@ public class Vision extends SubsystemBase {
       Logger.recordOutput(
           "Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesRejected",
           robotPosesRejected.toArray(new Pose3d[0]));
+      Logger.recordOutput(
+          "Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesMT2",
+          robotPosesMT2.toArray(new Pose3d[0]));
+
       allTagPoses.addAll(tagPoses);
       allRobotPoses.addAll(robotPoses);
       allRobotPosesAccepted.addAll(robotPosesAccepted);
       allRobotPosesRejected.addAll(robotPosesRejected);
+      allRobotPosesMT2.addAll(robotPosesMT2);
     }
 
     // Sort all accepted observations by timestamp (oldest first) so the pose
@@ -191,6 +200,8 @@ public class Vision extends SubsystemBase {
         "Vision/Summary/RobotPosesAccepted", allRobotPosesAccepted.toArray(new Pose3d[0]));
     Logger.recordOutput(
         "Vision/Summary/RobotPosesRejected", allRobotPosesRejected.toArray(new Pose3d[0]));
+    Logger.recordOutput(
+        "Vision/Summary/RobotPosesMT2", allRobotPosesMT2.toArray(new Pose3d[0]));
   }
   
   /**
