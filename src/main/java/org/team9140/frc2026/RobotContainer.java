@@ -176,10 +176,17 @@ public class RobotContainer {
 
     Trigger wantIntake = this.controller.rightBumper();
 
-    wantIntake.onTrue(extender.armOut().alongWith(roller.intake()))
-        .onFalse(roller.off());
-    wantShoot.and(wantIntake.negate()).whileTrue(extender.jiggle().alongWith(roller.intake()))
-        .onFalse(roller.off());
+    wantShoot.and(wantIntake)
+        .onTrue(extender.armOut().andThen(roller.intake()));
+
+    wantShoot.and(wantIntake.negate())
+        .onTrue(roller.intake().andThen(extender.jiggle()));
+
+    wantShoot.negate().and(wantIntake)
+        .onTrue(extender.armOut().andThen(roller.intake()));
+
+    wantShoot.negate().and(wantIntake.negate())
+        .onTrue(extender.armOut().andThen(roller.off()));
 
     // I don't think there's replacement for entering numbers yet so still using
     // smart dashboard
