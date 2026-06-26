@@ -74,9 +74,9 @@ public class AutonomousRoutines {
         this.autoChooser = new AutoChooser("Do Nothing");
 
         autoChooser.addCmd("Shoot Preload", this::shootPreload);
-        autoChooser.addRoutine("One Depot Pass Then Neutral", () -> onePass(true));
-        autoChooser.addRoutine("One Outpost Pass Then Neutral", () -> onePass(false));
-        autoChooser.addRoutine("Score Depot Then Neutral", this::scoreDepot);
+        autoChooser.addRoutine("Left Pass Then Neutral", () -> onePass(true));
+        autoChooser.addRoutine("Right Pass Then Neutral", () -> onePass(false));
+        autoChooser.addRoutine("Middle To Depot Then Neutral", this::scoreDepot);
 
         SmartDashboard.putData("Auto Chooser", this.autoChooser);;
         RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
