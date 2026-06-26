@@ -21,7 +21,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -162,8 +161,8 @@ public class AutonomousRoutines {
             Commands.sequence(
                 drivetrain.stop(), // zeroes out any leftover velocity
                 Commands.parallel(
-                    new WaitCommand(7).andThen(extender.armIn()), // does the squeeze, maybe use canrange in future
-                    aimThenShootWhenReady().withTimeout(13)),
+                    roller.intake().andThen(extender.jiggle()),
+                    aimThenShootWhenReady()).withTimeout(13),
                 aimAndShootOff(),
                 toNeutralTraj.cmd()));
         
@@ -191,8 +190,8 @@ public class AutonomousRoutines {
         intakingTraj.done().onTrue(Commands.sequence(
                 drivetrain.stop(), // zeroes out any leftover velocity
                 Commands.parallel(
-                    new WaitCommand(7).andThen(extender.armIn()), // does the squeeze, maybe use canrange in future
-                    aimThenShootWhenReady().withTimeout(10)),
+                    roller.intake().andThen(extender.jiggle()),
+                    aimThenShootWhenReady()).withTimeout(10),
                 aimAndShootOff(),
                 toNeutralTraj.cmd()));
         
