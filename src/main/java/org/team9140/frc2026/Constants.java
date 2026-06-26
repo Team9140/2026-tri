@@ -70,7 +70,7 @@ public final class Constants {
 
         public static final double X_CONTROLLER_P = 2.5 * 3.141592653589793238462643383279502884197169399375;
         public static final double X_CONTROLLER_I = 0.0;
-        public static final double X_CONTROLLER_D = 0.015; // TODO: Raise value
+        public static final double X_CONTROLLER_D = 0.015;
         public static final double Y_CONTROLLER_P = X_CONTROLLER_P;
         public static final double Y_CONTROLLER_I = X_CONTROLLER_I;
         public static final double Y_CONTROLLER_D = X_CONTROLLER_D;
@@ -80,12 +80,12 @@ public final class Constants {
 
         public static final double REACHEDPOSE_DEBOUNCE = 0.5;
         public static final double BRAKE_IDLE_TIME = 1.0;
-        public static final double TELEOP_SHOOTING_VELOCITY_MULTIPLIER = 0.67;
+        public static final double TELEOP_SHOOTING_VELOCITY_MULTIPLIER = 0.5;
         public static final double CONTROLLER_DEADBAND = 0.12;
     }
 
     public static class Shooter {
-        public static final double PEAK_FORWARD_TORQUE = 70.0; // is also used for stator current limit? idk why
+        public static final double PEAK_FORWARD_TORQUE = 70.0;
         public static final double PEAK_REVERSE_TORQUE = 0.0;
 
         public static final double SUPPLY_CURRENT_LIMIT = 40.0;
@@ -144,7 +144,7 @@ public final class Constants {
         public static final double KI = 0.0;
         public static final double KD = 67.0;
 
-        public static final double FORWARD_SOFT_LIMIT_THRESHOLD = 0.08; // 0.08;
+        public static final double FORWARD_SOFT_LIMIT_THRESHOLD = 0.08;
         public static final double REVERSE_SOFT_LIMIT_THRESHOLD = 0.01;
         public static final double GEAR_RATIO = 36.0 / 8.0 * 170.0 / 10.0;
         public static final double SENSOR_TO_MECHANISM_RATIO = 170.0 / 10.0 * 16.0 / 25.0;

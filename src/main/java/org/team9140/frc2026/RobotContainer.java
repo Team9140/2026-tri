@@ -79,7 +79,7 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case REAL -> {
         drivetrain = new CommandSwerveDrivetrain(TunerConstants.createRealDrivetrain());
-        vision = new Vision(drivetrain::addVisionMeasurement, 
+        vision = new Vision(drivetrain::addVisionMeasurement,
             new VisionIOLimelight(VisionConstants.camera0Name, drivetrain::getRotation),
             new VisionIOLimelight(VisionConstants.camera1Name, drivetrain::getRotation),
             new VisionIOLimelight(VisionConstants.camera2Name, drivetrain::getRotation));
@@ -95,9 +95,12 @@ public class RobotContainer {
         drivetrain = new CommandSwerveDrivetrain(TunerConstants.createSimDrivetrain());
         vision = new Vision(
             drivetrain::addVisionMeasurement,
-            new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, drivetrain::getDrivetrainPose),
-            new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, drivetrain::getDrivetrainPose),
-            new VisionIOPhotonVisionSim(VisionConstants.camera2Name, VisionConstants.robotToCamera2, drivetrain::getDrivetrainPose));
+            new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0,
+                drivetrain::getDrivetrainPose),
+            new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1,
+                drivetrain::getDrivetrainPose),
+            new VisionIOPhotonVisionSim(VisionConstants.camera2Name, VisionConstants.robotToCamera2,
+                drivetrain::getDrivetrainPose));
         roller = new Roller(new RollerIOReal());
         extender = new Extender(new ExtenderIOSim());
         turret = new Turret(new TurretIOSim());
@@ -153,11 +156,11 @@ public class RobotContainer {
   private final CommandXboxController controller = new CommandXboxController(0);
 
   private void configureBindings() {
-    Command normalDriveCommand = drivetrain.teleopDrive(controller::getLeftX, controller::getLeftY, controller::getRightX);
+    Command normalDriveCommand = drivetrain.teleopDrive(controller::getLeftX, controller::getLeftY,
+        controller::getRightX);
     drivetrain.setDefaultCommand(normalDriveCommand);
 
-    Trigger readyToShoot = hood.atPosition.and(shooter.atVelocity).and(turret.atPosition); // Should we ever debounce
-                                                                                           // this?
+    Trigger readyToShoot = hood.atPosition.and(shooter.atVelocity).and(turret.atPosition);
     Trigger wantAim = this.controller.rightTrigger(0.3).debounce(Constants.Turret.TURN_SHOOTER_OFF_TIME,
         DebounceType.kFalling);
     Trigger wantShoot = this.controller.rightTrigger(0.9);
@@ -165,6 +168,7 @@ public class RobotContainer {
     Command aimOnCommand = turret.aim().alongWith(shooter.aim()).alongWith(hood.aim());
     Command aimOffCommand = turret.off().alongWith(shooter.off()).alongWith(hood.off());
     wantAim.onTrue(aimOnCommand).onFalse(aimOffCommand);
+    wantAim.whileTrue(drivetrain.shootingDrive(controller::getLeftX, controller::getLeftY, controller::getRightX));
 
     Command shootOnCommand = spinner.feed().alongWith(feeder.feed());
     Command shootOffCommand = spinner.off().alongWith(feeder.reverseAndOff());
@@ -193,11 +197,13 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  /*  This is now not needed as the choreo auto factory just has us bind the auto command to RobotModeTriggers.autonomous()
-  public Command getAutonomousCommand() {
-    return null;
-  }
-    */
+  /*
+   * This is now not needed as the choreo auto factory just has us bind the auto
+   * command to RobotModeTriggers.autonomous()
+   * public Command getAutonomousCommand() {
+   * return null;
+   * }
+   */
 
   public void updateViz() {
 
