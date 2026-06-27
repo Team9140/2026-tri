@@ -59,8 +59,9 @@ public class LookUpAimAlign {
         motorSpeedFromDistanceShooting.put(Units.feetToMeters(11 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 2275 / 60.0);
         motorSpeedFromDistanceShooting.put(Units.feetToMeters(12 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 2329.17 / 60.0);
         motorSpeedFromDistanceShooting.put(Units.feetToMeters(13 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 2383.33 / 60.0);
-        motorSpeedFromDistanceShooting.put(Units.feetToMeters(14 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 2491.67 / 60.0);
-        motorSpeedFromDistanceShooting.put(Units.feetToMeters(15 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 2600.0 / 60.0);
+        // Changed bc missing corner shot
+        motorSpeedFromDistanceShooting.put(Units.feetToMeters(14 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 2708.33 / 60.0);
+        motorSpeedFromDistanceShooting.put(Units.feetToMeters(15 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 2708.33 / 60.0);
         motorSpeedFromDistanceShooting.put(Units.feetToMeters(16 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 2708.33 / 60.0);
 
         motorSpeedFromDistancePassing.put(Units.feetToMeters(1 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 1516.67 / 60.0);
@@ -94,8 +95,9 @@ public class LookUpAimAlign {
         hoodAngleFromDistanceShooting.put(Units.feetToMeters(11 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 32.0);
         hoodAngleFromDistanceShooting.put(Units.feetToMeters(12 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 33.0);
         hoodAngleFromDistanceShooting.put(Units.feetToMeters(13 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 33.0);
-        hoodAngleFromDistanceShooting.put(Units.feetToMeters(14 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 34.0);
-        hoodAngleFromDistanceShooting.put(Units.feetToMeters(15 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 35.0);
+        // changed bc missing corner shot
+        hoodAngleFromDistanceShooting.put(Units.feetToMeters(14 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 37.0);
+        hoodAngleFromDistanceShooting.put(Units.feetToMeters(15 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 37.0);
         hoodAngleFromDistanceShooting.put(Units.feetToMeters(16 + BUMPER_TO_TURRET_FT + HALF_HUB_FT), 37.0);
 
         hoodAngleFromDistancePassing.put(1.0, 42.0);
