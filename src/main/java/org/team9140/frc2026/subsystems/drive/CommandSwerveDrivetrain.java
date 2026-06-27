@@ -9,6 +9,7 @@ import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.team9140.frc2026.Constants.Drive;
+import org.team9140.frc2026.helpers.LookUpAimAlign;
 import org.team9140.lib.Util;
 
 import com.ctre.phoenix6.Utils;
@@ -176,6 +177,8 @@ public class CommandSwerveDrivetrain extends SubsystemBase{
         Logger.processInputs("Drivetrain", inputs);
         robotField2d.setRobotPose(inputs.Pose);
         SmartDashboard.putData(robotField2d);
+
+        Logger.recordOutput("Distance to Hub Center", inputs.Pose.getTranslation().getDistance(LookUpAimAlign.getHub().getTranslation()));
 
         driveAutonXerror = autonTargetPose.getX() - inputs.Pose.getX();
         driveAutonYerror = autonTargetPose.getY() - inputs.Pose.getY();
