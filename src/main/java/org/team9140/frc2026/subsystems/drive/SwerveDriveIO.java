@@ -7,13 +7,21 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 
 public interface SwerveDriveIO {
 
     @AutoLog
-    static class SwerveDriveIOInputs extends SwerveDriveState{}
+    static class SwerveDriveIOInputs extends SwerveDriveState{
+        public SwerveDriveIOInputs() {
+            ModuleStates = new SwerveModuleState[4];
+            ModuleTargets = new SwerveModuleState[4];
+            ModulePositions = new SwerveModulePosition[4];
+        }
+    }
 
     default void updateInputs(SwerveDriveIOInputs inputs) {}
 

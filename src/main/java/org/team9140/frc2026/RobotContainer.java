@@ -113,7 +113,7 @@ public class RobotContainer {
       default -> { // This is replay but we need a default case for it to work
         drivetrain = new CommandSwerveDrivetrain(new SwerveDriveIO() {
         });
-        vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO[3]);
+        vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO[]{new VisionIO(){}, new VisionIO(){}, new VisionIO(){}});
         roller = new Roller(new RollerIO() {
         });
         extender = new Extender(new ExtenderIO() {
