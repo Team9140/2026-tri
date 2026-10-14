@@ -14,6 +14,7 @@ import org.team9140.lib.Util;
 
 import com.ctre.phoenix6.SignalLogger;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
@@ -50,6 +51,8 @@ public class Robot extends LoggedRobot {
     }
 
     Logger.start();
+    // Lets us see what commands are running at any given time.
+    SmartDashboard.putData(CommandScheduler.getInstance());
 
     SignalLogger.enableAutoLogging(false);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
