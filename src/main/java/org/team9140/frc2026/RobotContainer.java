@@ -203,12 +203,13 @@ public class RobotContainer {
         .alongWith(shooter.tuning(() -> SmartDashboard.getNumber("tuning RPM", 2500)))
         .alongWith(hood.tuning(() -> SmartDashboard.getNumber("tuning Angle", 24.0)));
     this.controller.y().onTrue(tuningCommand).onFalse(aimOffCommand);
+    this.controller.x().onTrue(shootOnCommand).onFalse(shootOffCommand);
   }
 
   /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
+   * Used to put the poses needed for 3d visualization in advantagescope.
+   * It should only be called during simulation.
+   * 
    */
   /*
    * This is now not needed as the choreo auto factory just has us bind the auto
