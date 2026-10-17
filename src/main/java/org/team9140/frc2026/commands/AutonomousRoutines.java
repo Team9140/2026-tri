@@ -162,7 +162,7 @@ public class AutonomousRoutines {
                 drivetrain.stop(), // zeroes out any leftover velocity
                 Commands.parallel(
                     roller.intake().andThen(extender.jiggle()),
-                    aimThenShootWhenReady()).withTimeout(13),
+                    aimThenShootWhenReady()).withTimeout(11),
                 aimAndShootOff(),
                 toNeutralTraj.cmd()));
         
