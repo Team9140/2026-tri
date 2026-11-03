@@ -155,6 +155,7 @@ public class LookUpAimAlign {
     }
 
     public static Pose2d getZone(Pose2d robotPose) {
+        /* 
         double rx = robotPose.getX();
         double ry = robotPose.getY();
         Pose2d position;
@@ -178,13 +179,18 @@ public class LookUpAimAlign {
             }
         }
         return position;
+        */
+        return FieldConstants.Tower.CENTER_POINT;
     }
 
     public static Pose2d getHub() {
+        /* 
         if (Util.getAlliance().equals(Optional.of(DriverStation.Alliance.Red))) {
             return FieldConstants.Hub.RED_CENTER_POINT;
         }
 
         return FieldConstants.Hub.CENTER_POINT;
+        */
+        return FieldConstants.Tower.CENTER_POINT;
     }
 }
