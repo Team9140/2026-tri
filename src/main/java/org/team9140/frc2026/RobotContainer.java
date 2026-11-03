@@ -81,8 +81,8 @@ public class RobotContainer {
       case REAL -> {
         drivetrain = new CommandSwerveDrivetrain(TunerConstants.createRealDrivetrain());
         vision = new Vision(drivetrain::addVisionMeasurement,
-            new VisionIOLimelight(VisionConstants.camera0Name, drivetrain::getRotation),
-            new VisionIOLimelight(VisionConstants.camera1Name, drivetrain::getRotation),
+            // new VisionIOLimelight(VisionConstants.camera0Name, drivetrain::getRotation),
+            // new VisionIOLimelight(VisionConstants.camera1Name, drivetrain::getRotation),
             new VisionIOLimelight(VisionConstants.camera2Name, drivetrain::getRotation));
         roller = new Roller(new RollerIOReal());
         extender = new Extender(new ExtenderIOReal());
@@ -96,10 +96,10 @@ public class RobotContainer {
         drivetrain = new CommandSwerveDrivetrain(TunerConstants.createSimDrivetrain());
         vision = new Vision(
             drivetrain::addVisionMeasurement,
-            new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0,
-                drivetrain::getDrivetrainPose),
-            new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1,
-                drivetrain::getDrivetrainPose),
+            // new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0,
+            //     drivetrain::getDrivetrainPose),
+            // new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1,
+            //     drivetrain::getDrivetrainPose),
             new VisionIOPhotonVisionSim(VisionConstants.camera2Name, VisionConstants.robotToCamera2,
                 drivetrain::getDrivetrainPose));
         roller = new Roller(new RollerIOReal());
@@ -113,7 +113,7 @@ public class RobotContainer {
       default -> { // This is replay but we need a default case for it to work
         drivetrain = new CommandSwerveDrivetrain(new SwerveDriveIO() {
         });
-        vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO[]{new VisionIO(){}, new VisionIO(){}, new VisionIO(){}});
+        vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO[]{new VisionIO(){}});
         roller = new Roller(new RollerIO() {
         });
         extender = new Extender(new ExtenderIO() {
