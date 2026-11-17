@@ -31,6 +31,7 @@ public class VisionIOPhotonVision implements VisionIO {
    */
   public VisionIOPhotonVision(String name, Transform3d robotToCamera) {
     camera = new PhotonCamera(name);
+    camera.setFPSLimit(60);
     this.robotToCamera = robotToCamera;
   }
 

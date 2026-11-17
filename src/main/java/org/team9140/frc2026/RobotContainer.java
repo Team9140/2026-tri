@@ -39,6 +39,7 @@ import org.team9140.frc2026.subsystems.vision.Vision;
 import org.team9140.frc2026.subsystems.vision.VisionConstants;
 import org.team9140.frc2026.subsystems.vision.VisionIO;
 import org.team9140.frc2026.subsystems.vision.VisionIOLimelight;
+import org.team9140.frc2026.subsystems.vision.VisionIOPhotonVision;
 import org.team9140.frc2026.subsystems.vision.VisionIOPhotonVisionSim;
 
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -83,7 +84,7 @@ public class RobotContainer {
         vision = new Vision(drivetrain::addVisionMeasurement,
             // new VisionIOLimelight(VisionConstants.camera0Name, drivetrain::getRotation),
             // new VisionIOLimelight(VisionConstants.camera1Name, drivetrain::getRotation),
-            new VisionIOLimelight(VisionConstants.camera2Name, drivetrain::getRotation));
+            new VisionIOPhotonVision(VisionConstants.camera2Name, VisionConstants.robotToCamera2));
         roller = new Roller(new RollerIOReal());
         extender = new Extender(new ExtenderIOReal());
         turret = new Turret(new TurretIOReal());
